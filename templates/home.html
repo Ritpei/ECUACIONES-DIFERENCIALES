@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Simulaciones EDO - Entorno Académico</title>
+    
+    <!-- Hojas de estilos del home -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <!-- Outfit y Space Grotesk Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Simulación de Ecuaciones Diferenciales</h1>
+            <p>Modelado matemático interactivo de sistemas dinámicos resuelto mediante métodos analíticos y numéricos (Euler / RK4 / scipy)</p>
+        </header>
+
+        <!-- Grid de Tarjetas (Cards) para las 4 simulaciones -->
+        <main class="grid-cards">
+            <!-- Tarjeta 1: Enfriamiento de Newton -->
+            <div class="card card-cooling">
+                <div class="card-icon">🍕</div>
+                <h2>Enfriamiento de Alimentos</h2>
+                <div class="edo-tag">dT/dt = -k(T - Tm)</div>
+                <p>Simulación del enfriamiento térmico de una rebanada de pizza mediante la Ley de Enfriamiento de Newton. Cuenta con una animación termoreactiva en tiempo real.</p>
+                <a href="/enfriamiento" class="btn btn-cooling">Ejecutar Simulación</a>
+            </div>
+
+            <!-- Tarjeta 2: Crecimiento Logístico -->
+            <div class="card card-population">
+                <div class="card-icon">🌎</div>
+                <h2>Crecimiento Poblacional</h2>
+                <div class="edo-tag">dP/dt = rP(1 - P/K)</div>
+                <p>Análisis demográfico de la población del estado de Jalisco (1950 - 2050) aplicando el modelo logístico de Verhulst y un mapa interactivo con círculos de densidad.</p>
+                <a href="/poblacion" class="btn btn-population">Ejecutar Simulación</a>
+            </div>
+
+            <!-- Tarjeta 3: Malware WannaCry (SIR) -->
+            <div class="card card-virus">
+                <div class="card-icon">💻</div>
+                <h2>Propagación de Malware</h2>
+                <div class="edo-tag">Modelo SIR Acoplado</div>
+                <p>Simulador epidemiológico computacional del virus WannaCry (2017) basado en los hitos reales y control de propagación del Kill-Switch de MalwareTech.</p>
+                <a href="/virus" class="btn btn-virus">Ejecutar Simulación</a>
+            </div>
+
+            <!-- Tarjeta 4: Brotes Zombies (TWD) -->
+            <div class="card card-zombies">
+                <div class="card-icon">🧟</div>
+                <h2>Apocalipsis Zombie (TWD)</h2>
+                <div class="edo-tag">Modelo SZR Adaptado</div>
+                <p>Simulador táctico militar del virus Wildfire basado en The Walking Dead. Resuelve 12.5 años de dinámica con scipy, escala logarítmica y efecto de refugio.</p>
+                <a href="/zombies" class="btn btn-zombies">Ejecutar Simulación</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>Refactorización Modular unificada bajo Flask Blueprints corriendo en Puerto 8000 &copy; 2026</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo SZR - Apocalipsis Zombie TWD - Simulador EDO</title>
+    
+    <!-- CSS Táctico y de Supervivencia -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Chart.js para Graficado Logarítmico -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax para Renderizado de Fórmulas Matemáticas -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado -->
+        <header>
+            <h1>Simulador del Virus Wildfire (The Walking Dead)</h1>
+            <p>Monitoreo epidemiológico SZR resuelto con scipy.integrate.odeint en escala logarítmica</p>
+        </header>
+
+        <!-- Pestañas (Tabs) -->
+        <div class="tabs-container">
+            <button class="tab-btn active" data-tab="simulacion">Simulador Interactivo</button>
+            <button class="tab-btn" data-tab="modelo">Modelo Matemático</button>
+        </div>
+
+        <!-- Pestaña 1: Simulador Interactivo -->
+        <div id="simulacion" class="tab-content active">
+            <div class="panel simulation-grid">
+                <!-- Columna Izquierda: Controles y Bitácora -->
+                <div class="controls-column">
+                    <h2>Parámetros de Simulación</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        Ajusta las condiciones de supervivencia global de la humanidad.
+                    </p>
+
+                    <!-- Slider: Día de Descubrimiento -->
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Día de Descubrimiento (t_desc)</span>
+                            <span class="control-val" id="val-tdesc">Día 365</span>
+                        </div>
+                        <input type="range" id="slider-tdesc" min="150" max="1000" step="10" value="365">
+                    </div>
+
+                    <!-- Slider: Capacidad de Refugio -->
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Capacidad del Refugio (S_refugio)</span>
+                            <span class="control-val" id="val-refugio">70,000</span>
+                        </div>
+                        <input type="range" id="slider-refugio" min="1000" max="1000000" step="5000" value="70000">
+                    </div>
+
+                    <!-- Estadísticas Finales -->
+                    <div class="stats-dashboard">
+                        <div class="stat-box human-box">
+                            <span class="stat-title">Sobrevivientes (Día 4562)</span>
+                            <span class="stat-value" id="stat-human">0</span>
+                        </div>
+                        <div class="stat-box zombie-box">
+                            <span class="stat-title">Caminantes (Día 4562)</span>
+                            <span class="stat-value" id="stat-zombie">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Bitácora Táctica -->
+                    <div class="console-panel">
+                        <div class="console-title">
+                            <span>🛰️ Bitácora de Incidencias</span>
+                            <span style="opacity: 0.5;">MILITARY LOG</span>
+                        </div>
+                        <ul class="console-list">
+                            <li class="console-item active" data-threshold="150">
+                                <strong>Día 150: Caída de la Civilización.</strong> Caos inicial absoluto. La tasa de contagio es máxima debido al colapso militar y social global.
+                            </li>
+                            <li class="console-item active" id="console-discovery" data-threshold="365">
+                                <strong>Día 365: CDC y Descubrimiento.</strong> La humanidad aprende a destruir el cerebro sistemáticamente. Las muertes naturales reducen su tasa de reanimación del 100% al 5%.
+                            </li>
+                            <li class="console-item active" data-threshold="1277">
+                                <strong>Día 1277: Reinicio de Natalidad.</strong> Se establecen comunidades seguras y nacen niños en refugios (tasa de natalidad del 1.5%).
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Gráfico -->
+                <div class="visualization-column">
+                    <div class="graph-container">
+                        <canvas id="twdChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña 2: Modelo Matemático -->
+        <div id="modelo" class="tab-content">
+            <div class="panel math-section">
+                <h2>Modelo SZR Modificado para The Walking Dead</h2>
+                <p>
+                    En el universo de *The Walking Dead*, el virus Wildfire está latente en toda la población viva. La reanimación no requiere una mordedura zombie; cualquier persona que fallezca por causas naturales reanima como caminante a menos que se destruya su cerebro.
+                </p>
+
+                <h3>Ecuaciones Diferenciales Ordinarias (EDO)</h3>
+                <p>El sistema se rige por dos ecuaciones diferenciales acopladas no lineales:</p>
+                <div class="math-card">
+                    $$\begin{align*}
+                    \frac{dS}{dt} &= b(t)S - d \cdot S - \beta_{eff}(t) \frac{S Z}{N} \\
+                    \frac{dZ}{dt} &= \kappa(t) d \cdot S + \beta_{eff}(t) \frac{S Z}{N} - \alpha(t) \frac{S Z}{N} - \zeta Z
+                    \end{align*}$$
+                </div>
+
+                <p>Donde las variables y funciones dinámicas son las siguientes:</p>
+                <ul class="variable-list">
+                    <li><strong class="blue">\(S(t)\)</strong>: Sobrevivientes (Humanos vivos, portadores latentes del virus).</li>
+                    <li><strong class="red">\(Z(t)\)</strong>: Caminantes (Zombies activos).</li>
+                    <li><strong>\(N = S + Z\)</strong>: Población total activa que interactúa en el ecosistema.</li>
+                    <li><strong>\(b(t)\)</strong>: Tasa de natalidad diaria. Se mantiene en \(0.0\) en los primeros años de caos nómada y se activa al \(1.5\%\) anual (\(\frac{15/1000}{365}\)) en el día \(1277\) (Año 3.5), simulando el establecimiento de asentamientos estables.</li>
+                    <li><strong>\(d\)</strong>: Tasa de mortalidad humana por causas naturales, hambruna leve o enfermedades (\(\frac{10/1000}{365}\)).</li>
+                    <li><strong>\(\kappa(t)\)</strong>: Tasa de reanimación por muerte natural. Antes del día de descubrimiento (\(t_{desc}\)), todos los cadáveres reaniman (\(\kappa = 1.0\)). Posterior a esta fecha, baja al \(5\%\) (\(\kappa = 0.05\)) gracias al protocolo de destruir el cerebro.</li>
+                    <li><strong>\(\alpha(t)\) y \(\beta(t)\)</strong>: Parámetros de combate y contagio adaptativos según la fase del brote (Caos inicial, Supervivencia nómada y Asentamientos amurallados).</li>
+                    <li><strong>\(\zeta\)</strong>: Tasa diaria de putrefacción zombie (\(\frac{1}{5 \cdot 365}\)), modelando la inmovilidad completa tras 5 años de descomposición.</li>
+                </ul>
+
+                <h3>El Concepto del Umbral de Refugio (\(S_{refugio}\))</h3>
+                <p>
+                    Sin medidas de mitigación demográfica, las simulaciones estándar del apocalipsis zombie conducen irreversiblemente a la extinción total humana (\(S \to 0\)). Para modelar la existencia de bases seguras inexpugnables (como la Zona Segura de Alexandria o Commonwealth), se introduce el **Efecto de Aislamiento por Refugio**:
+                </p>
+                <div class="math-card">
+                    $$\beta_{eff}(t) = \beta(t) \cdot \max\left(0, \frac{S - S_{refugio}}{S}\right)$$
+                </div>
+                <p>
+                    Cuando la población humana decrece y se aproxima al umbral de seguridad de los refugios (\(S \to S_{refugio}\)), la tasa de encuentros hostiles con mordidas efectivas disminuye asintóticamente a cero. Esto permite una estabilización matemática de la curva demográfica de sobrevivientes en el largo plazo, como se puede constatar en la pestaña del simulador interactivo al cambiar los sliders.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Control e Interactividad -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
