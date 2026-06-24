@@ -1,22 +1,36 @@
-/* Importar tipografías tácticas y modernas */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap');
+/* ==========================================================================
+   ESTILOS PREMIUM MILITAR/APOCALÍPTICO - MODELO SZR ZOMBIE
+   Estética militar táctica, paneles de advertencia de riesgo biológico y HUD de radar.
+   ========================================================================== */
+
+/* Importar tipografías industriales y monoespaciadas */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;700&family=Oswald:wght@500;700&display=swap');
 
 :root {
-    --bg-gradient: linear-gradient(135deg, #05080b 0%, #111710 100%);
-    --panel-bg: rgba(15, 22, 16, 0.85);
-    --border-color: rgba(132, 204, 22, 0.2); /* Borde verde militar fluorescente */
+    /* Paleta Táctica de Emergencia */
+    --tactical-bg: #070907;
+    --tactical-bg-grad: radial-gradient(circle at 50% 50%, #101511 0%, #050705 100%);
+    --panel-bg: rgba(14, 20, 15, 0.88);
+    --border-color: rgba(132, 204, 22, 0.22); /* Verde militar fluorescente */
+    
+    /* Colores del Ecosistema */
+    --accent-color: #84cc16;       /* Verde táctico principal */
+    --accent-glow: rgba(132, 204, 22, 0.35);
+    
+    --human-color: #0284c7;        /* Azul táctico / Sobrevivientes */
+    --human-glow: rgba(2, 132, 199, 0.4);
+    
+    --zombie-color: #dc2626;       /* Rojo Sangre / Caminantes */
+    --zombie-glow: rgba(220, 38, 38, 0.4);
+    
+    --hazard-yellow: #ca8a04;      /* Amarillo biológico de advertencia */
+    --hazard-yellow-glow: rgba(202, 138, 4, 0.35);
+
     --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    
-    /* Colores Específicos */
-    --accent-color: #84cc16;       /* Verde militar/táctico */
-    --accent-glow: rgba(132, 204, 22, 0.4);
-    
-    --human-color: #38bdf8;        /* Azul sobrevivientes */
-    --zombie-color: #ef4444;       /* Rojo caminantes */
-    --warning-glow: rgba(239, 68, 68, 0.3);
+    --text-secondary: #788a78;     /* Gris militar verdoso */
 }
 
+/* Reset y configuraciones generales */
 * {
     margin: 0;
     padding: 0;
@@ -25,51 +39,181 @@
 }
 
 body {
-    background: var(--bg-gradient);
+    background: var(--tactical-bg);
+    background-image: var(--tactical-bg-grad);
     color: var(--text-primary);
     min-height: 100vh;
-    padding: 2rem;
+    padding: 1.5rem;
     overflow-x: hidden;
+    position: relative;
 }
 
-.container {
+/* ==========================================================================
+   Efecto de Radar y Estática de Pantalla
+   ========================================================================== */
+.radar-scan {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(132, 204, 22, 0) 0%,
+        rgba(132, 204, 22, 0.03) 50%,
+        rgba(132, 204, 22, 0) 100%
+    );
+    background-size: 100% 200%;
+    animation: scanSweep 12s infinite linear;
+    z-index: -1;
+    pointer-events: none;
+}
+
+@keyframes scanSweep {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 0% -200%; }
+}
+
+.vignette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.font-mono {
+    font-family: 'Fira Code', monospace !important;
+}
+
+/* Navegación de Emergencia */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0 auto 1.5rem auto;
+    padding: 0 1rem;
 }
 
-/* Header */
-header {
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    border: 1px dashed var(--border-color);
+    background: rgba(132, 204, 22, 0.04);
+    transition: all 0.25s ease;
+}
+
+.back-link:hover {
+    background: rgba(132, 204, 22, 0.12);
+    box-shadow: 0 0 10px var(--accent-glow);
+    border-style: solid;
+}
+
+.back-arrow {
+    font-size: 0.95rem;
+}
+
+.emergency-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--zombie-color);
+    border: 1px solid var(--zombie-color);
+    padding: 0.35rem 0.8rem;
+    background: rgba(220, 38, 38, 0.08);
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 10px rgba(220, 38, 38, 0.15);
+}
+
+.badge-blink {
+    animation: emergencyBlink 1s infinite alternate;
+}
+
+@keyframes emergencyBlink {
+    0% { opacity: 0.2; }
+    100% { opacity: 1; }
+}
+
+/* ==========================================================================
+   ENCABEZADO MILITAR TÁCTICO CON FRANJAS DE PELIGRO
+   ========================================================================== */
+.tactical-header {
     text-align: center;
-    margin-bottom: 2.5rem;
-    border-bottom: 1px dashed var(--border-color);
-    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-header h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 800;
-    background: linear-gradient(to right, #84cc16, #ef4444);
+.hazard-stripe {
+    height: 6px;
+    background: repeating-linear-gradient(
+        -45deg,
+        #ca8a04,
+        #ca8a04 10px,
+        #070907 10px,
+        #070907 20px
+    );
+    border: 1px solid rgba(202, 138, 4, 0.3);
+}
+
+.header-container {
+    padding: 1.2rem 0;
+    background: rgba(14, 20, 15, 0.5);
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+}
+
+.project-id {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.4rem;
+}
+
+.tactical-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--zombie-color) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.05em;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 0 15px rgba(132, 204, 22, 0.05);
 }
 
-header p {
+.tactical-subtitle {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-family: 'Fira Code', monospace;
 }
 
-/* Tabs */
+/* ==========================================================================
+   TABS DE CONTROL MILITAR
+   ========================================================================== */
 .tabs-container {
     display: flex;
     justify-content: center;
+    gap: 0.5rem;
     margin-bottom: 2rem;
-    background: rgba(10, 15, 11, 0.6);
-    padding: 0.4rem;
-    border-radius: 8px;
+    background: rgba(6, 8, 6, 0.85);
+    padding: 0.3rem;
     border: 1px solid var(--border-color);
     max-width: fit-content;
     margin-left: auto;
@@ -80,163 +224,391 @@ header p {
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    padding: 0.8rem 2rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-transform: uppercase;
+    padding: 0.8rem 1.8rem;
+    font-size: 0.85rem;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
     letter-spacing: 0.05em;
     cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
 .tab-btn:hover {
-    color: var(--text-primary);
+    color: var(--accent-color);
+    background: rgba(132, 204, 22, 0.03);
 }
 
 .tab-btn.active {
     background: var(--accent-color);
-    color: #050805;
+    color: #070907;
     font-weight: 700;
+    border: 1px solid var(--accent-color);
     box-shadow: 0 0 12px var(--accent-glow);
 }
 
-/* Tab Content */
 .tab-content {
     display: none;
-    animation: fadeIn 0.5s ease;
+    animation: tacticalFadeIn 0.4s ease-out;
 }
 
 .tab-content.active {
     display: block;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+@keyframes tacticalFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Glassmorphism Panel */
+/* ==========================================================================
+   PANEL CON ESTÉTICA DE BUNKER MILITAR
+   ========================================================================== */
 .panel {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 2rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 15px rgba(132, 204, 22, 0.02);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 0 20px rgba(0, 240, 255, 0.01);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Cantoneras decorativas angulares de tipo industrial */
+.panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border-top: 3px solid var(--accent-color);
+    border-left: 3px solid var(--accent-color);
+}
+
+.panel::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    border-bottom: 3px solid var(--accent-color);
+    border-right: 3px solid var(--accent-color);
 }
 
 /* Grid Layout */
 .simulation-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
+    grid-template-columns: 1fr 1.45fr;
     gap: 2rem;
 }
 
-@media (max-width: 950px) {
+@media (max-width: 1024px) {
     .simulation-grid {
         grid-template-columns: 1fr;
     }
 }
 
-/* Left controls */
 .controls-column {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.2rem;
 }
 
+.panel-section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.title-bullet {
+    color: var(--zombie-color);
+    font-weight: 900;
+}
+
+.panel-desc {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(132, 204, 22, 0.08);
+    padding-bottom: 0.4rem;
+}
+
+/* ==========================================================================
+   CONTROLES (SLIDERS DE PUESTA A TIERRA ANALÓGICOS)
+   ========================================================================== */
 .control-group {
-    background: rgba(10, 15, 11, 0.5);
+    background: rgba(8, 12, 9, 0.65);
     border: 1px solid rgba(132, 204, 22, 0.1);
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.control-group:hover {
+    border-color: rgba(132, 204, 22, 0.35);
+    box-shadow: 0 0 10px rgba(132, 204, 22, 0.05);
 }
 
 .control-label {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
     font-weight: 600;
     margin-bottom: 0.8rem;
-    font-size: 0.95rem;
+}
+
+.label-text {
     color: var(--text-primary);
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.05em;
 }
 
 .control-val {
+    background: rgba(132, 204, 22, 0.1);
     color: var(--accent-color);
-    font-family: 'Fira Code', monospace;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(132, 204, 22, 0.2);
+}
+
+/* Personalización del Range Input */
+.slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 input[type="range"] {
     -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 3px;
     outline: none;
+    z-index: 2;
 }
 
+/* Tirador (Thumb) del Slider - Diseño de Palanca Analógica */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 4px; /* Cuadrado táctico */
+    appearance: none;
+    width: 12px;
+    height: 20px;
+    border-radius: 2px; /* Rectangular militar */
     background: var(--accent-color);
+    border: 1px solid var(--tactical-bg);
     cursor: pointer;
-    box-shadow: 0 0 10px var(--accent-glow);
-    transition: transform 0.1s ease;
+    box-shadow: 0 0 8px var(--accent-glow);
+    transition: all 0.1s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
+    transform: scaleX(1.3) scaleY(1.15);
+    background: #ffffff;
+    box-shadow: 0 0 12px #ffffff;
 }
 
-/* Dashboard de estadísticas */
+input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 20px;
+    border-radius: 2px;
+    background: var(--accent-color);
+    border: 1px solid var(--tactical-bg);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--accent-glow);
+    transition: all 0.1s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    transform: scaleX(1.3) scaleY(1.15);
+    background: #ffffff;
+}
+
+/* Slider de Capacidad de Refugio - Tirador en Azul Táctico */
+#slider-refugio::-webkit-slider-thumb {
+    background: var(--human-color);
+    box-shadow: 0 0 8px var(--human-color);
+}
+#slider-refugio::-webkit-slider-thumb:hover {
+    background: #ffffff;
+}
+#slider-refugio::-moz-range-thumb {
+    background: var(--human-color);
+    box-shadow: 0 0 8px var(--human-color);
+}
+
+.slider-indicators {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 0.4rem;
+}
+
+/* ==========================================================================
+   DASHBOARD DE ESTADÍSTICAS (PÁGINA E INTERIOR)
+   ========================================================================== */
 .stats-dashboard {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    margin-top: 1rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.stats-dashboard.border-danger {
+    border: 1px dashed rgba(220, 38, 38, 0.2);
+}
+
+.selected-step-dashboard {
+    background: rgba(8, 12, 9, 0.6);
+    border: 1px solid var(--border-color);
 }
 
 .stat-box {
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px dashed rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 1rem;
     display: flex;
     flex-direction: column;
 }
 
 .stat-title {
-    font-size: 0.8rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 0.3rem;
-}
-
-.stat-box.human-box {
-    border-left: 4px solid var(--human-color);
-}
-.stat-box.human-box .stat-title {
-    color: var(--human-color);
-}
-
-.stat-box.zombie-box {
-    border-left: 4px solid var(--zombie-color);
-}
-.stat-box.zombie-box .stat-title {
-    color: var(--zombie-color);
+    color: var(--text-secondary);
+    margin-bottom: 0.2rem;
 }
 
 .stat-value {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.6rem;
+    font-weight: 700;
     font-family: 'Fira Code', monospace;
+    letter-spacing: -0.02em;
 }
 
-/* Right visualization */
+.text-sky {
+    color: var(--human-color);
+    text-shadow: 0 0 10px rgba(2, 132, 199, 0.15);
+}
+
+.text-red {
+    color: var(--zombie-color);
+    text-shadow: 0 0 10px rgba(220, 38, 38, 0.15);
+}
+
+/* Estilo para las cajas de pasos seleccionados */
+.stat-box.step-box {
+    border-left: 3px solid transparent;
+    padding-left: 0.8rem;
+}
+
+.stat-box.human-step-box {
+    border-left-color: var(--human-color);
+}
+.stat-box.human-step-box .stat-title {
+    color: var(--human-color);
+}
+.stat-box.human-step-box .stat-value {
+    color: var(--human-color);
+}
+
+.stat-box.zombie-step-box {
+    border-left-color: var(--zombie-color);
+}
+.stat-box.zombie-step-box .stat-title {
+    color: var(--zombie-color);
+}
+.stat-box.zombie-step-box .stat-value {
+    color: var(--zombie-color);
+}
+
+/* ==========================================================================
+   BITÁCORA MILITAR CLASIFICADA
+   ========================================================================== */
+.console-panel {
+    background: rgba(6, 8, 6, 0.85);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.2rem;
+    position: relative;
+}
+
+.console-panel::after {
+    content: 'CLASSIFIED // COMSEC';
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.6rem;
+    color: rgba(220, 38, 38, 0.15);
+}
+
+.console-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(132, 204, 22, 0.2);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.05em;
+}
+
+.console-badge {
+    font-size: 0.7rem;
+    background: rgba(132, 204, 22, 0.1);
+    border: 1px solid var(--border-color);
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+}
+
+.console-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    list-style: none;
+}
+
+.console-item {
+    font-size: 0.8rem;
+    font-family: 'Fira Code', monospace;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding: 0.5rem 0.7rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.01);
+    transition: all 0.25s ease;
+}
+
+.console-item strong {
+    color: var(--accent-color);
+}
+
+/* Hito militar activo */
+.console-item.active {
+    color: var(--text-primary);
+    background: rgba(132, 204, 22, 0.06);
+    border-left: 3px solid var(--accent-color);
+}
+
+/* ==========================================================================
+   GRAFICO DE RADAR Y TIMELINE (DERECHA)
+   ========================================================================== */
 .visualization-column {
     display: flex;
     flex-direction: column;
@@ -244,106 +616,163 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .graph-container {
-    height: 380px;
+    height: 390px;
     position: relative;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(6, 8, 6, 0.7);
     border-radius: 12px;
     padding: 1rem;
-    border: 1px solid rgba(255,255,255,0.03);
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.85);
 }
 
-/* Console logs for Storytelling */
-.console-panel {
-    background: #060907;
-    border: 1px solid rgba(132, 204, 22, 0.15);
+/* Efecto CRT retro en el visor de gráfico */
+.crt-glow-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(132, 204, 22, 0.03) 100%);
+    pointer-events: none;
     border-radius: 12px;
-    padding: 1.2rem;
 }
 
-.console-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1rem;
-    color: var(--accent-color);
-    border-bottom: 1px solid rgba(132, 204, 22, 0.2);
-    padding-bottom: 0.4rem;
-    margin-bottom: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+/* Barra de Tiempo Militar */
+.timeline-panel {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 1.2rem;
+    background: rgba(8, 12, 9, 0.65);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.console-list {
-    list-style: none;
+.play-btn {
+    background: linear-gradient(135deg, #1b2e1a 0%, #0d1a0d 100%);
+    border: 1px solid var(--border-color);
+    width: 46px;
+    height: 46px;
+    border-radius: 4px; /* Táctico cuadrado */
+    color: var(--accent-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(132, 204, 22, 0.15);
+    transition: all 0.2s ease;
+}
+
+.play-btn:hover {
+    background: var(--accent-color);
+    color: #070907;
+    box-shadow: 0 0 15px var(--accent-color);
+}
+
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+.play-icon {
+    font-size: 1rem;
+}
+
+.timeline-control-container {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.4rem;
 }
 
-.console-item {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.8rem;
+.timeline-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timeline-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
     color: var(--text-secondary);
-    line-height: 1.4;
-    padding: 0.4rem 0.6rem;
-    border-radius: 6px;
-    transition: all 0.3s ease;
 }
 
-.console-item.active {
-    color: var(--text-primary);
-    background: rgba(132, 204, 22, 0.08);
-    box-shadow: inset 0 0 5px rgba(132, 204, 22, 0.1);
+/* Timeline Slider Thumb especial */
+.timeline-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+    background: var(--hazard-yellow);
+    box-shadow: 0 0 8px var(--hazard-yellow);
+}
+.timeline-slider-wrapper input[type="range"]::-webkit-slider-thumb:hover {
+    background: #ffffff;
+}
+.timeline-slider-wrapper input[type="range"]::-moz-range-thumb {
+    background: var(--hazard-yellow);
+    box-shadow: 0 0 8px var(--hazard-yellow);
 }
 
-.console-item strong {
-    color: var(--accent-color);
-}
-
-/* Tab 2: Math and EDO descriptions */
+/* ==========================================================================
+   DOSIER CIENTÍFICO (TAB 2)
+   ========================================================================== */
 .math-section {
     line-height: 1.8;
-    font-size: 1.1rem;
-    color: #cbd5e1;
+    color: #a4bfa4;
 }
 
 .math-section h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Oswald', sans-serif;
     color: var(--text-primary);
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+}
+
+.math-section p {
+    font-size: 0.96rem;
+    margin-bottom: 1.2rem;
+}
+
+.math-section strong {
+    color: #ffffff;
 }
 
 .math-section h3 {
+    font-family: 'Oswald', sans-serif;
     color: var(--accent-color);
     margin-top: 1.8rem;
     margin-bottom: 0.8rem;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
 }
 
 .math-card {
-    background: rgba(10, 15, 11, 0.5);
+    background: rgba(8, 12, 9, 0.65);
     border-radius: 8px;
     padding: 1.5rem;
-    margin: 1.5rem 0;
+    margin: 1.2rem 0;
     border-left: 4px solid var(--accent-color);
-    font-family: monospace;
+    border-top: 1px dashed rgba(132, 204, 22, 0.2);
+    border-right: 1px dashed rgba(132, 204, 22, 0.2);
+    border-bottom: 1px dashed rgba(132, 204, 22, 0.2);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+    font-size: 0.98rem;
     overflow-x: auto;
 }
 
 .variable-list {
     margin: 1rem 0;
     padding-left: 1.5rem;
+    list-style-type: circle;
 }
 
 .variable-list li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.92rem;
 }
 
-.variable-list strong {
-    color: var(--text-primary);
-}
-.variable-list strong.blue { color: var(--human-color); }
-.variable-list strong.red { color: var(--zombie-color); }
+.blue-text { color: var(--human-color) !important; }
+.red-text { color: var(--zombie-color) !important; }
+.white-text { color: #ffffff !important; }
+.lime-text { color: var(--accent-color) !important; }
+.font-bold { font-weight: 700; }

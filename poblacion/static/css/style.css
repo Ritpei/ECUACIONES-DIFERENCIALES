@@ -1,17 +1,32 @@
-/* Importar tipografía moderna */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap');
+/* ==========================================================================
+   ESTILOS PREMIUM DE PORTAL DEMOGRÁFICO - CRECIMIENTO LOGÍSTICO (JALISCO)
+   Diseño tipo Dashboard Gubernamental, integración del mapa Leaflet y overlays flotantes.
+   ========================================================================== */
+
+/* Importación de fuentes oficiales */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
-    --bg-gradient: linear-gradient(135deg, #022c22 0%, #0f172a 100%);
-    --panel-bg: rgba(15, 23, 42, 0.7);
-    --border-color: rgba(255, 255, 255, 0.08);
+    /* Paleta Institucional (Portal de Estadística) */
+    --gov-navy-bg: #090e1a;
+    --gov-navy-grad: radial-gradient(circle at 50% 50%, #111a2e 0%, #090e1a 100%);
+    --panel-bg: rgba(17, 24, 39, 0.8);
+    --border-color: rgba(13, 148, 136, 0.18); /* Verde azulado / Teal */
+    --panel-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(13, 148, 136, 0.04);
+    
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
-    --accent-color: #0d9488; /* Teal */
-    --accent-glow: rgba(13, 148, 136, 0.4);
-    --warning-color: #e11d48; /* Red for saturating K */
+
+    /* Colores Gubernamentales Oficiales */
+    --teal-gov: #0d9488;          /* Verde institucional */
+    --teal-glow: rgba(13, 148, 136, 0.35);
+    --blue-gov: #2563eb;          /* Azul corporativo */
+    --blue-glow: rgba(37, 99, 235, 0.35);
+    --emerald-gov: #10b981;       /* Verde positivo */
+    --accent-color: #0d9488;
 }
 
+/* Reset y configuraciones generales */
 * {
     margin: 0;
     padding: 0;
@@ -20,49 +35,135 @@
 }
 
 body {
-    background: var(--bg-gradient);
+    background: var(--gov-navy-bg);
+    background-image: var(--gov-navy-grad);
     color: var(--text-primary);
     min-height: 100vh;
-    padding: 2rem;
+    padding: 1.5rem;
     overflow-x: hidden;
 }
 
-.container {
+.font-mono {
+    font-family: 'Fira Code', monospace !important;
+}
+
+/* Navegación Superior */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0 auto 1.5rem auto;
+    padding: 0 1rem;
 }
 
-/* Header */
-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-}
-
-header h1 {
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--teal-gov);
+    text-decoration: none;
+    font-size: 0.85rem;
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 800;
-    background: linear-gradient(to right, #0d9488, #38bdf8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.05em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid rgba(13, 148, 136, 0.2);
+    border-radius: 6px;
+    background: rgba(13, 148, 136, 0.02);
+    transition: all 0.3s ease;
 }
 
-header p {
+.back-link:hover {
+    background: rgba(13, 148, 136, 0.12);
+    box-shadow: 0 0 10px var(--teal-glow);
+    transform: translateX(-2px);
+}
+
+.back-arrow {
+    transition: transform 0.25s ease;
+}
+
+.back-link:hover .back-arrow {
+    transform: translateX(-3px);
+}
+
+.gov-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    font-size: 1.1rem;
 }
 
-/* Tabs */
+.gov-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--teal-gov);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--teal-glow);
+    animation: govDotPulse 2s infinite alternate;
+}
+
+@keyframes govDotPulse {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* ==========================================================================
+   ENCABEZADO DE PORTAL GUBERNAMENTAL
+   ========================================================================== */
+.gov-header {
+    margin-bottom: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    border-left: 4px solid var(--teal-gov);
+    padding-left: 1.5rem;
+}
+
+.gov-ministry {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    color: var(--teal-gov);
+    font-weight: bold;
+    letter-spacing: 0.1em;
+}
+
+.gov-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-top: 0.2rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.03em;
+}
+
+.header-line {
+    width: 60px;
+    height: 3px;
+    background-color: var(--teal-gov);
+    margin-bottom: 0.6rem;
+}
+
+.gov-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   TABS DE CONTROL
+   ========================================================================== */
 .tabs-container {
     display: flex;
     justify-content: center;
+    gap: 0.5rem;
     margin-bottom: 2rem;
-    background: rgba(15, 23, 42, 0.5);
-    padding: 0.4rem;
-    border-radius: 9999px;
-    border: 1px solid var(--border-color);
+    background: rgba(17, 24, 39, 0.6);
+    padding: 0.35rem;
+    border-radius: 8px;
+    border: 1px solid rgba(13, 148, 136, 0.1);
     max-width: fit-content;
     margin-left: auto;
     margin-right: auto;
@@ -72,123 +173,222 @@ header p {
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
+    padding: 0.75rem 1.8rem;
+    font-size: 0.88rem;
+    font-weight: 700;
     cursor: pointer;
-    border-radius: 9999px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .tab-btn:hover {
-    color: var(--text-primary);
+    color: var(--teal-gov);
 }
 
 .tab-btn.active {
-    background: var(--accent-color);
-    color: white;
-    box-shadow: 0 4px 14px var(--accent-glow);
+    background: var(--teal-gov);
+    color: #ffffff;
+    box-shadow: 0 4px 12px var(--teal-glow);
 }
 
-/* Tab Content */
 .tab-content {
     display: none;
-    animation: fadeIn 0.5s ease;
+    animation: govFadeIn 0.4s ease-out;
 }
 
 .tab-content.active {
     display: block;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes govFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Glassmorphism Panel */
+/* ==========================================================================
+   PANEL GUBERNAMENTAL (GLASSMORPHISM)
+   ========================================================================== */
 .panel {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-radius: 24px;
+    border-radius: 16px;
     padding: 2rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: var(--panel-glow);
+    position: relative;
 }
 
 /* Grid Layout */
 .simulation-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
+    grid-template-columns: 1fr 1.4fr;
     gap: 2rem;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
     .simulation-grid {
         grid-template-columns: 1fr;
     }
 }
 
-/* Left controls */
 .controls-column {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 1.5rem;
 }
 
+.panel-section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.title-decor {
+    color: var(--teal-gov);
+    font-family: monospace;
+}
+
+.panel-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   SLIDERS DE PROYECCIÓN GUBERNAMENTALES
+   ========================================================================== */
 .control-group {
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 1rem;
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(13, 148, 136, 0.06);
+    border-radius: 8px;
+    padding: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.control-group:hover {
+    border-color: rgba(13, 148, 136, 0.25);
 }
 
 .control-label {
     display: flex;
     justify-content: space-between;
+    font-size: 0.9rem;
     font-weight: 600;
-    margin-bottom: 0.6rem;
-    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+}
+
+.label-name {
     color: var(--text-primary);
 }
 
 .control-val {
-    color: var(--accent-color);
+    color: var(--teal-gov);
     font-family: 'Space Grotesk', sans-serif;
+    font-weight: bold;
+}
+
+/* Slider Track styling */
+.slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 input[type="range"] {
     -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
     outline: none;
+    z-index: 2;
 }
 
+/* Tirador (Thumb) del Slider */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
+    appearance: none;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: var(--teal-gov);
+    border: 2px solid var(--gov-navy-bg);
     cursor: pointer;
-    box-shadow: 0 0 10px var(--accent-glow);
-    transition: transform 0.1s ease;
+    box-shadow: 0 0 8px var(--teal-glow);
+    transition: all 0.15s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
     transform: scale(1.2);
+    background: #ffffff;
+    box-shadow: 0 0 12px #ffffff;
 }
 
-/* Tarjeta de métricas clave */
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--teal-gov);
+    border: 2px solid var(--gov-navy-bg);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--teal-glow);
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* Colores personalizados por slider */
+#slider-p0::-webkit-slider-thumb {
+    background: var(--blue-gov);
+    box-shadow: 0 0 8px var(--blue-gov);
+}
+#slider-p0::-moz-range-thumb {
+    background: var(--blue-gov);
+}
+
+#slider-r::-webkit-slider-thumb {
+    background: var(--emerald-gov);
+    box-shadow: 0 0 8px var(--emerald-gov);
+}
+#slider-r::-moz-range-thumb {
+    background: var(--emerald-gov);
+}
+
+.slider-indicators {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   METRICAS Y RESULTADOS (PROYECCIÓN HUD)
+   ========================================================================== */
 .metrics-card {
-    background: linear-gradient(135deg, rgba(13, 148, 136, 0.15) 0%, rgba(15, 23, 42, 0.5) 100%);
-    border: 1px solid rgba(13, 148, 136, 0.25);
-    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
     padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+.metric-top-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.3fr;
     gap: 1rem;
 }
 
@@ -198,51 +398,60 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .metric-title {
-    font-size: 0.8rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
     color: var(--text-secondary);
-    text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
 }
 
 .metric-value {
-    font-size: 1.4rem;
-    font-weight: bold;
-    font-family: 'Space Grotesk', sans-serif;
-    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
 }
 
+/* Porcentaje de capacidad utilizada y barra de progreso */
 .metric-percentage {
-    grid-column: span 2;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 0.6rem;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.percentage-meta {
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.percentage-meta .metric-value {
+    font-size: 1.1rem;
+    color: var(--teal-gov);
 }
 
 .progress-bar-container {
-    flex-grow: 1;
     height: 8px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     border-radius: 4px;
-    margin-left: 1rem;
     overflow: hidden;
     position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 .progress-bar-fill {
     height: 100%;
-    background: var(--accent-color);
-    width: 0%;
-    transition: width 0.3s ease, background-color 0.3s ease;
+    width: 17.4%; /* Controlado dinámicamente por JS */
+    background: linear-gradient(to right, var(--blue-gov), var(--teal-gov));
+    border-radius: 4px;
+    box-shadow: 0 0 8px var(--teal-glow);
+    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.progress-bar-fill.saturated {
-    background: var(--warning-color);
-}
-
-/* Right visualization */
+/* ==========================================================================
+   INTEGRACIÓN DEL MAPA LEAFLET Y GOOGLE OVERLAY
+   ========================================================================== */
 .visualization-column {
     display: flex;
     flex-direction: column;
@@ -251,122 +460,186 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .map-container-wrapper {
     position: relative;
-    border-radius: 16px;
-    overflow: hidden;
+    height: 330px;
+    border-radius: 12px;
     border: 1px solid var(--border-color);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 
-/* Leaflet Map Height */
 #map {
-    height: 280px;
     width: 100%;
-    background: #111827; /* Dark background before tiles load */
+    height: 100%;
+    z-index: 1; /* Por debajo de controles Leaflet y overlays */
 }
 
-/* Google Maps API Key Input Overlay (Optional, for demo) */
+/* Estilización oscura personalizada para Leaflet Maps */
+.leaflet-container {
+    background: #0f172a !important;
+}
+
+/* Panel flotante de Google Maps API key */
 .gmaps-overlay-panel {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
-    z-index: 1000;
-    background: rgba(15, 23, 42, 0.95);
-    padding: 0.5rem 0.8rem;
+    top: 10px;
+    right: 10px;
+    z-index: 1000; /* Por encima de Leaflet */
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    padding: 0.8rem 1rem;
+    width: 280px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    font-size: 0.8rem;
+    flex-direction: column;
+    gap: 0.4rem;
 }
 
-.gmaps-overlay-panel input {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border-color);
+.panel-header-tactical {
+    font-size: 0.65rem;
+    color: var(--teal-gov);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.panel-input-row {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.gmaps-overlay-panel input[type="password"] {
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
-    color: white;
-    padding: 0.2rem 0.4rem;
+    padding: 0.35rem 0.6rem;
+    color: #ffffff;
+    font-size: 0.78rem;
     outline: none;
-    font-family: monospace;
-    width: 120px;
+}
+
+.gmaps-overlay-panel input[type="password"]:focus {
+    border-color: var(--teal-gov);
 }
 
 .gmaps-overlay-panel button {
-    background: var(--accent-color);
+    background: var(--teal-gov);
     border: none;
     color: white;
-    padding: 0.2rem 0.5rem;
+    padding: 0.35rem 0.8rem;
     border-radius: 4px;
-    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: bold;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
 }
 
+.gmaps-overlay-panel button:hover {
+    background: #0f766e;
+}
+
+/* Contenedor del Gráfico de Población */
 .graph-container {
-    height: 280px;
+    height: 300px;
     position: relative;
+    background: rgba(15, 23, 42, 0.45);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.02);
 }
 
-/* Playback Control (Timeline Slider) */
+/* Timeline e Hitos */
 .timeline-panel {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 1.2rem;
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 16px;
     padding: 1rem;
 }
 
 .play-btn {
-    background: var(--accent-color);
+    background: var(--teal-gov);
     border: none;
     width: 44px;
     height: 44px;
-    border-radius: 50%;
+    border-radius: 4px;
     color: white;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.2rem;
-    box-shadow: 0 4px 10px var(--accent-glow);
+    box-shadow: 0 4px 10px var(--teal-glow);
     transition: all 0.2s ease;
 }
 
 .play-btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 
-/* Tab 2: Math section style */
+.timeline-control-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.timeline-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timeline-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.timeline-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+    background: var(--teal-gov);
+    box-shadow: 0 0 8px var(--teal-gov);
+}
+.timeline-slider-wrapper input[type="range"]::-moz-range-thumb {
+    background: var(--teal-gov);
+}
+
+/* ==========================================================================
+   DOSIER DE VERHULST (TAB 2)
+   ========================================================================== */
 .math-section {
     line-height: 1.8;
-    font-size: 1.1rem;
     color: #cbd5e1;
 }
 
 .math-section h2 {
     font-family: 'Space Grotesk', sans-serif;
     color: var(--text-primary);
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
 }
 
 .math-section h3 {
-    color: var(--accent-color);
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--teal-gov);
     margin-top: 1.8rem;
     margin-bottom: 0.8rem;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
 }
 
 .math-card {
-    background: rgba(15, 23, 42, 0.3);
+    background: rgba(15, 23, 42, 0.5);
     border-radius: 12px;
     padding: 1.5rem;
-    margin: 1.5rem 0;
-    border-left: 4px solid var(--accent-color);
-    font-family: monospace;
+    margin: 1.2rem 0;
+    border-left: 4px solid var(--teal-gov);
     overflow-x: auto;
 }
 
@@ -377,8 +650,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .variable-list li {
     margin-bottom: 0.5rem;
+    font-size: 0.95rem;
 }
 
 .variable-list strong {
-    color: var(--text-primary);
+    color: #ffffff;
 }

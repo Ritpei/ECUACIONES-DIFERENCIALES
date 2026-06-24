@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ley de Enfriamiento de Newton - Simulador EDO</title>
+    <title>Enfriamiento Térmico - Newton's Law Simulation</title>
     
-    <!-- CSS Estilos Premium -->
+    <!-- CSS Estilos Premium Térmicos -->
     <link rel="stylesheet" href="{{ url_for('enfriamiento.static', filename='css/style.css') }}">
     
     <!-- Librería Chart.js para los gráficos -->
@@ -15,23 +15,36 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
 </head>
 <body>
-    <div style="padding: 1rem 0 0 1rem; max-width: 1200px; margin: 0 auto;">
-        <a href="/" style="color: var(--accent-color); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
-            &larr; Volver al Menú Principal
+    <div class="thermal-glow"></div>
+    
+    <div class="top-nav">
+        <a href="/" class="back-link">
+            <span class="back-arrow">&larr;</span> 
+            <span class="back-text">HUB // RETORNAR AL MENÚ</span>
         </a>
+        <div class="sensor-status">
+            <span class="sensor-icon">🌡️</span>
+            <span class="status-text font-mono">THERMAL_SENSORS // ONLINE</span>
+        </div>
     </div>
 
     <div class="container">
         <!-- Encabezado de la página -->
-        <header>
-            <h1>Enfriamiento de una Pizza</h1>
-            <p>Modelado matemático del enfriamiento mediante la Ley de Enfriamiento de Newton y el método Runge-Kutta 4 (RK4)</p>
+        <header class="thermal-header">
+            <div class="thermal-badge">ESTADO TERMODINÁMICO DE LOS ALIMENTOS</div>
+            <h1>Ley de Enfriamiento de Newton</h1>
+            <div class="header-divider"></div>
+            <p class="thermal-subtitle">// Modelado analítico y numérico RK4 del enfriamiento de una pizza</p>
         </header>
 
         <!-- Contenedor de Pestañas (Tabs) -->
         <div class="tabs-container">
-            <button class="tab-btn active" data-tab="simulacion">Simulación Interactiva</button>
-            <button class="tab-btn" data-tab="modelo">Modelo y Solución</button>
+            <button class="tab-btn active" data-tab="simulacion">
+                <span class="tab-icon">🔥</span> SIMULADOR INTERACTIVO
+            </button>
+            <button class="tab-btn" data-tab="modelo">
+                <span class="tab-icon">📖</span> MARCO TEÓRICO (EDO)
+            </button>
         </div>
 
         <!-- Pestaña 1: Simulación Interactiva -->
@@ -39,68 +52,108 @@
             <div class="panel simulation-grid">
                 <!-- Columna Izquierda: Parámetros del modelo -->
                 <div class="controls-column">
-                    <h2>Parámetros Iniciales</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
-                        Modifica los deslizadores para ver cómo responde la EDO en tiempo real.
+                    <div class="panel-section-title">
+                        <span class="title-decor">//</span> Parámetros Termodinámicos
+                    </div>
+                    <p class="panel-description">
+                        Modifica los deslizadores para alterar las condiciones iniciales de calor y del entorno de la pizza.
                     </p>
 
                     <!-- Control: Temperatura Inicial -->
                     <div class="control-group">
                         <div class="control-label">
-                            <span>Temperatura Inicial (T₀)</span>
-                            <span class="control-val" id="val-t0">200°C</span>
+                            <span class="label-name">Temperatura Inicial de Pizza (T₀)</span>
+                            <span class="control-val font-mono" id="val-t0">200°C</span>
                         </div>
-                        <input type="range" id="slider-t0" min="50" max="300" step="5" value="200">
+                        <div class="slider-wrapper">
+                            <input type="range" id="slider-t0" min="50" max="300" step="5" value="200">
+                            <div class="slider-fill fill-t0"></div>
+                        </div>
+                        <div class="slider-indicators font-mono">
+                            <span>50°C (Templada)</span>
+                            <span>300°C (Horno)</span>
+                        </div>
                     </div>
 
                     <!-- Control: Temperatura Ambiente -->
                     <div class="control-group">
                         <div class="control-label">
-                            <span>Temperatura Ambiente (T_m)</span>
-                            <span class="control-val" id="val-tm">20°C</span>
+                            <span class="label-name">Temperatura Ambiente Entorno (T_m)</span>
+                            <span class="control-val font-mono" id="val-tm">20°C</span>
                         </div>
-                        <input type="range" id="slider-tm" min="0" max="40" step="1" value="20">
+                        <div class="slider-wrapper">
+                            <input type="range" id="slider-tm" min="0" max="40" step="1" value="20">
+                            <div class="slider-fill fill-tm"></div>
+                        </div>
+                        <div class="slider-indicators font-mono">
+                            <span>0°C (Congelador)</span>
+                            <span>40°C (Caluroso)</span>
+                        </div>
                     </div>
 
                     <!-- Control: Constante k -->
                     <div class="control-group">
                         <div class="control-label">
-                            <span>Constante de Enfriamiento (k)</span>
-                            <span class="control-val" id="val-k">0.05</span>
+                            <span class="label-name">Constante de Disipación (k)</span>
+                            <span class="control-val font-mono" id="val-k">0.05</span>
                         </div>
-                        <input type="range" id="slider-k" min="0.01" max="0.2" step="0.01" value="0.05">
+                        <div class="slider-wrapper">
+                            <input type="range" id="slider-k" min="0.01" max="0.2" step="0.01" value="0.05">
+                            <div class="slider-fill fill-k"></div>
+                        </div>
+                        <div class="slider-indicators font-mono">
+                            <span>0.01 (Plato Térmico)</span>
+                            <span>0.20 (Viento Frío)</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Columna Derecha: Gráfico y Representación Física -->
                 <div class="visualization-column">
-                    <!-- Representación Visual de la Pizza -->
-                    <div class="pizza-container">
-                        <div class="temp-badge">T: <span id="temp-badge-val">200°C</span></div>
-                        
-                        <!-- Vapor animado -->
-                        <div class="steam-container">
-                            <div class="steam-line"></div>
-                            <div class="steam-line"></div>
-                            <div class="steam-line"></div>
+                    <!-- Fusión de Pizza y Termómetro Dinámico -->
+                    <div class="thermal-visualizer-container">
+                        <!-- Termómetro dinámico de laboratorio -->
+                        <div class="thermometer-wrapper">
+                            <div class="thermometer-scale">
+                                <span>300°</span>
+                                <span>200°</span>
+                                <span>100°</span>
+                                <span>0°</span>
+                            </div>
+                            <div class="thermometer-glass">
+                                <div class="thermometer-fluid"></div>
+                            </div>
+                            <div class="thermometer-bulb"></div>
                         </div>
 
-                        <!-- Slice de Pizza SVG -->
-                        <svg class="pizza-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Masa/Corteza (Café dorado) -->
-                            <path d="M 50 10 L 15 90 A 45 45 0 0 0 85 90 Z" fill="#b45309" stroke="#78350f" stroke-width="1.5" />
-                            <!-- Borde de Masa (Grueso) -->
-                            <path d="M 15 90 A 45 45 0 0 0 85 90" fill="none" stroke="#d97706" stroke-width="6" stroke-linecap="round" />
-                            <!-- Salsa de Tomate (Rojo intermedio) -->
-                            <path class="pizza-sauce" d="M 50 18 L 22 84 A 36 36 0 0 0 78 84 Z" />
-                            <!-- Queso fundido (Variable interactiva) -->
-                            <path class="pizza-cheese" d="M 50 24 L 26 80 A 30 30 0 0 0 74 80 Z" />
-                            <!-- Pepperonis (Rojo Oscuro) -->
-                            <circle cx="50" cy="48" r="5" fill="#991b1b" />
-                            <circle cx="40" cy="62" r="5" fill="#991b1b" />
-                            <circle cx="60" cy="62" r="5" fill="#991b1b" />
-                            <circle cx="50" cy="72" r="5" fill="#991b1b" />
-                        </svg>
+                        <!-- Pizza container -->
+                        <div class="pizza-container">
+                            <div class="temp-badge font-mono">T_PIZZA: <span id="temp-badge-val">200.0°C</span></div>
+                            
+                            <!-- Vapor animado en caliente -->
+                            <div class="steam-container">
+                                <div class="steam-line"></div>
+                                <div class="steam-line"></div>
+                                <div class="steam-line"></div>
+                            </div>
+
+                            <!-- Slice de Pizza SVG -->
+                            <svg class="pizza-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Masa/Corteza dorada -->
+                                <path d="M 50 10 L 15 90 A 45 45 0 0 0 85 90 Z" fill="#92400e" stroke="#451a03" stroke-width="1.5" />
+                                <!-- Borde grueso de corteza crujiente -->
+                                <path d="M 15 90 A 45 45 0 0 0 85 90" fill="none" stroke="#d97706" stroke-width="5" stroke-linecap="round" />
+                                <!-- Salsa de Tomate (Color termo-sensible) -->
+                                <path class="pizza-sauce" d="M 50 18 L 22 84 A 36 36 0 0 0 78 84 Z" />
+                                <!-- Queso derretido (Color termo-sensible) -->
+                                <path class="pizza-cheese" d="M 50 24 L 26 80 A 30 30 0 0 0 74 80 Z" />
+                                <!-- Pepperonis clásicos -->
+                                <circle cx="50" cy="46" r="4.5" fill="#7f1d1d" stroke="#450a0a" stroke-width="0.8" />
+                                <circle cx="38" cy="62" r="4.5" fill="#7f1d1d" stroke="#450a0a" stroke-width="0.8" />
+                                <circle cx="62" cy="62" r="4.5" fill="#7f1d1d" stroke="#450a0a" stroke-width="0.8" />
+                                <circle cx="50" cy="74" r="4.5" fill="#7f1d1d" stroke="#450a0a" stroke-width="0.8" />
+                            </svg>
+                        </div>
                     </div>
 
                     <!-- Gráfico de Línea Temporal -->
@@ -109,14 +162,19 @@
                     </div>
 
                     <!-- Panel de control temporal (Timeline) -->
-                    <div class="panel timeline-panel">
-                        <button class="play-btn" id="play-btn">&#9654;</button>
-                        <div style="flex-grow: 1;">
-                            <div class="control-label">
-                                <span>Línea del Tiempo (Animación)</span>
-                                <span class="control-val" id="current-sim-time">0.0 min</span>
+                    <div class="timeline-panel">
+                        <button class="play-btn" id="play-btn" aria-label="Play/Pause cooling simulation">
+                            <span class="play-icon">&#9654;</span>
+                        </button>
+                        <div class="timeline-control-container">
+                            <div class="timeline-meta">
+                                <span class="timeline-label font-mono">// MONITOREO DE TEMPERATURA EN EL TIEMPO</span>
+                                <span class="control-val font-mono" id="current-sim-time">0.0 min</span>
                             </div>
-                            <input type="range" id="timeline-slider" min="0" max="100" value="0" style="width: 100%;">
+                            <div class="slider-wrapper timeline-slider-wrapper">
+                                <input type="range" id="timeline-slider" min="0" max="100" value="0">
+                                <div class="slider-fill fill-timeline"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -126,60 +184,51 @@
         <!-- Pestaña 2: Modelo Matemático y Solución -->
         <div id="modelo" class="tab-content">
             <div class="panel math-section">
-                <h2>Modelo Matemático: Ley de Enfriamiento de Newton</h2>
+                <h2><span class="title-decor">//</span> Modelo de Transferencia Térmica: Enfriamiento de Newton</h2>
                 <p>
-                    La <strong>Ley de Enfriamiento de Newton</strong> establece que la tasa de cambio de la temperatura de un cuerpo es directamente proporcional a la diferencia entre su propia temperatura (\(T\)) y la temperatura del medio ambiente (\(T_m\)) que lo rodea.
+                    La **Ley de Enfriamiento de Newton** enuncia que la velocidad de enfriamiento de un objeto es proporcional a la diferencia de temperatura entre este y su entorno inmediato. Es una de las leyes empíricas fundamentales de la termodinámica, postulando que el flujo de calor por conducción y convección responde directamente al gradiente térmico lineal.
                 </p>
 
-                <h3>Ecuación Diferencial Ordinaria (EDO)</h3>
-                <p>Matemáticamente, este comportamiento se modela a través de la siguiente EDO de primer orden:</p>
+                <h3>Ecuación Diferencial Ordinaria (EDO) de Primer Orden</h3>
+                <p>El balance térmico de la pizza en disipación se formula como:</p>
                 <div class="math-card">
                     $$\frac{dT}{dt} = -k(T - T_m)$$
                 </div>
 
-                <p>Donde las variables y constantes están definidas de la siguiente manera:</p>
-                <ul class="variable-list">
-                    <li><strong>\(T(t)\)</strong>: Temperatura de la rebanada de pizza en el instante de tiempo \(t\) (en °C).</li>
-                    <li><strong>\(t\)</strong>: Tiempo transcurrido (en minutos).</li>
-                    <li><strong>\(T_m\)</strong>: Temperatura ambiente del entorno (en °C).</li>
-                    <li><strong>\(k\)</strong>: Constante de conductividad térmica o velocidad de enfriamiento (en \(min^{-1}\)). El signo negativo indica que la temperatura disminuye si \(T > T_m\).</li>
-                    <li><strong>\(T(0) = T_0\)</strong>: Temperatura inicial de la pizza al salir del horno (en °C).</li>
+                <p>Donde las variables e índices se detallan como:</p>
+                <ul class="variable-list font-mono">
+                    <li><strong>T(t)</strong>: Temperatura instantánea del cuerpo (pizza) en el minuto \(t\) (en °C).</li>
+                    <li><strong>t</strong>: Tiempo transcurrido de observación (en minutos).</li>
+                    <li><strong>T_m</strong>: Temperatura constante del medio ambiente que lo rodea (en °C).</li>
+                    <li><strong>k</strong>: Coeficiente de transferencia de calor o conductividad térmica de la pizza (en \(min^{-1}\)).</li>
+                    <li><strong>T(0) = T₀</strong>: Temperatura inicial al salir del horno (en °C).</li>
                 </ul>
 
-                <h3>Solución Analítica (Exacta)</h3>
+                <h3>Solución Analítica (Trayectoria Exacta)</h3>
                 <p>
-                    Esta ecuación es de **variables separables** y lineal de primer orden. Separando las variables e integrando a ambos lados:
+                    Dado que la ecuación es autónoma y lineal, su resolución por **separación de variables** nos da:
                 </p>
                 <div class="math-card">
                     $$\int \frac{1}{T - T_m} dT = \int -k \, dt \implies \ln|T - T_m| = -kt + C$$
                 </div>
-                <p>Aplicando la función exponencial en ambos miembros, obtenemos la solución general:</p>
-                <div class="math-card">
-                    $$T(t) - T_m = C_1 e^{-kt} \implies T(t) = T_m + C_1 e^{-kt}$$
-                </div>
-                <p>
-                    Al evaluar la condición inicial \(T(0) = T_0\), encontramos que la constante es \(C_1 = T_0 - T_m\). Por lo tanto, la solución particular exacta es:
-                </p>
+                <p>Despejando la temperatura a través de la función exponencial e insertando la condición de frontera:</p>
                 <div class="math-card">
                     $$T(t) = T_m + (T_0 - T_m)e^{-kt}$$
                 </div>
 
-                <h3>Método de Solución Numérica: Runge-Kutta de 4to Orden (RK4)</h3>
+                <h3>Integración Numérica con Runge-Kutta 4 (RK4)</h3>
                 <p>
-                    Para resolver numéricamente el problema en el servidor Python, implementamos el algoritmo de **Runge-Kutta de cuarto orden (RK4)**. Este método proporciona una excelente precisión, con un error global de truncamiento del orden de \(\mathcal{O}(h^4)\).
+                    En el servidor backend, la aproximación de trayectorias se realiza iterativamente resolviendo con el clásico **método de Runge-Kutta de cuarto orden (RK4)**. El paso incremental térmico para cada instante \(t_{n+1} = t_n + h\) viene dado por:
                 </p>
-                <p>Definiendo la pendiente ponderada como promedio en cada intervalo \(h\):</p>
                 <div class="math-card">
                     $$T_{n+1} = T_n + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$
                 </div>
-                <p>Donde los coeficientes incrementales se evalúan en cada iteración de la siguiente manera:</p>
-                <div class="math-card">
-                    $$\begin{align*}
-                    k_1 &= f(t_n, T_n) = -k(T_n - T_m) \\
-                    k_2 &= f\left(t_n + \frac{h}{2}, T_n + \frac{h}{2}k_1\right) = -k\left(\left(T_n + \frac{h}{2}k_1\right) - T_m\right) \\
-                    k_3 &= f\left(t_n + \frac{h}{2}, T_n + \frac{h}{2}k_2\right) = -k\left(\left(T_n + \frac{h}{2}k_2\right) - T_m\right) \\
-                    k_4 &= f(t_n + h, T_n + hk_3) = -k((T_n + hk_3) - T_m)
-                    \end{align*}$$
+                <p>Donde las pendientes locales evaluadas son:</p>
+                <div class="math-card font-mono">
+                    k₁ = -k * (T_n - T_m) <br>
+                    k₂ = -k * ((T_n + h/2 * k₁) - T_m) <br>
+                    k₃ = -k * ((T_n + h/2 * k₂) - T_m) <br>
+                    k₄ = -k * ((T_n + h * k₃) - T_m)
                 </div>
             </div>
         </div>

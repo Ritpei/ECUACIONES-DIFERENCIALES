@@ -1,36 +1,48 @@
-// Variables globales
-let chart = null;
-let simData = null;
-let debounceTimeout = null;
-let animationId = null;
-let isPlaying = false;
-let currentStep = 0;
+/**
+ * ==========================================================================
+ * LÓGICA TÁCTICA DE SIMULACIÓN Y VISUALIZACIÓN - APOCALIPSIS ZOMBIE (SZR)
+ * Gestiona consultas POST asíncronas con debounce, escala logarítmica en Chart.js,
+ * gradientes tácticos y sincronización de hitos variables en tiempo real.
+ * ==========================================================================
+ */
 
-// Elementos del DOM
+// Variables globales de simulación y animación
+let chart = null;             // Instancia única del gráfico Chart.js
+let simData = null;           // Almacena las series temporales devueltas por el Flask API
+let debounceTimeout = null;   // Temporizador para mitigar peticiones duplicadas en arrastre (debounce)
+let animationId = null;       // ID del timeout de reproducción animada
+let isPlaying = false;        // Estado de reproducción activa
+let currentStep = 0;          // Paso seleccionado actual (0 a t_span.length - 1)
+
+// Elementos principales del DOM
 const sliderTdesc = document.getElementById('slider-tdesc');
 const sliderRefugio = document.getElementById('slider-refugio');
-
 const valTdesc = document.getElementById('val-tdesc');
 const valRefugio = document.getElementById('val-refugio');
 
+// Contadores globales de proyección final
 const statHuman = document.getElementById('stat-human');
 const statZombie = document.getElementById('stat-zombie');
 
+// Bitácora militar clasificada
 const consoleItems = document.querySelectorAll('.console-item');
 
-// Nuevos elementos para controles temporales y recuadros de paso seleccionado
+// Controles temporales y contadores del paso activo
 const timelineSlider = document.getElementById('timeline-slider');
 const currentSimTime = document.getElementById('current-sim-time');
 const playBtn = document.getElementById('play-btn');
 const currentHuman = document.getElementById('current-human');
 const currentZombie = document.getElementById('current-zombie');
 
+/**
+ * Evento de inicio y configuración inicial del DOM
+ */
 document.addEventListener('DOMContentLoaded', () => {
     setupTabs();
     setupSliders();
-    triggerSimulation(); // Simulación inicial
+    triggerSimulation(); // Lanzar simulación inicial con valores por defecto
     
-    // Configurar controladores de reproducción y slider temporal
+    // Asignar controladores para la línea del tiempo y playback
     playBtn.addEventListener('click', togglePlayback);
     timelineSlider.addEventListener('input', (e) => {
         pausePlayback();
@@ -39,7 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Configuración de pestañas
+/**
+ * Configurar selector de pestañas
+ */
 function setupTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -57,7 +71,11 @@ function setupTabs() {
     });
 }
 
-// Configuración de Sliders y Debounce
+/**
+ * Configurar Sliders con etiquetas interactivas y Debounce.
+ * TRUCO VISUAL: El Debounce de 60ms evita saturar de peticiones HTTP POST al servidor Flask
+ * mientras el usuario arrastra dinámicamente las barras de control táctico.
+ */
 function setupSliders() {
     const updateLabels = () => {
         valTdesc.textContent = `Día ${sliderTdesc.value} (${(sliderTdesc.value / 365).toFixed(1)} años)`;
@@ -68,7 +86,7 @@ function setupSliders() {
         slider.addEventListener('input', () => {
             updateLabels();
             
-            // Aplicar Debounce para no saturar al servidor al arrastrar los sliders
+            // Cancelar petición anterior si el usuario sigue moviendo la barra
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(triggerSimulation, 60);
         });
@@ -77,7 +95,10 @@ function setupSliders() {
     updateLabels();
 }
 
-// Enviar petición POST a la API de Flask
+/**
+ * Realizar petición POST al API del backend
+ * Envía las variables del modelo de contingencia en formato JSON.
+ */
 async function triggerSimulation() {
     const t_desc = parseFloat(sliderTdesc.value);
     const s_refugio = parseFloat(sliderRefugio.value);
@@ -99,14 +120,14 @@ async function triggerSimulation() {
         if (data.success) {
             simData = data;
             
-            // Actualizar panel de estadísticas finales
+            // Actualizar HUD superior con datos de proyección finales (Día 4562 / Año 12.5)
             statHuman.textContent = Math.round(data.final_s).toLocaleString();
             statZombie.textContent = Math.round(data.final_z).toLocaleString();
             
-            // Renderizar / Actualizar gráfico
+            // Regenerar / actualizar gráfico
             updateChart();
             
-            // Reajustar la línea de tiempo
+            // Sincronizar límites de la barra del reproductor
             timelineSlider.max = data.time.length - 1;
             if (currentStep >= data.time.length) {
                 currentStep = 0;
@@ -114,17 +135,22 @@ async function triggerSimulation() {
             timelineSlider.value = currentStep;
             updateVisualsAtStep(currentStep);
             
-            // Actualizar bitácora táctica del sidebar
+            // Actualizar la bitácora militar de incidencias con el día dinámico de descubrimiento
             updateConsoleLogs(t_desc);
         } else {
-            console.error("Error en la simulación:", data.error);
+            console.error("Error en simulación devuelto por el backend:", data.error);
         }
     } catch (err) {
-        console.error("Error de conexión con la API:", err);
+        console.error("Error de conexión de red con el API SZR:", err);
     }
 }
 
-// Plugin de hitos para dibujar líneas verticales
+/**
+ * TRUCO VISUAL: Plugin de hitos históricos variables en tiempo real.
+ * Dibuja líneas tácticas punteadas en el eje X del Canvas.
+ * Permite que la línea verde de "Descubrimiento del CDC" se mueva de forma fluida
+ * en el gráfico a medida que el usuario ajusta el slider `t_desc`.
+ */
 const twdMilestonesPlugin = {
     id: 'twdMilestonesPlugin',
     afterDraw: (chartInstance) => {
@@ -133,112 +159,159 @@ const twdMilestonesPlugin = {
         
         const tDesc = simData.t_desc;
         const milestones = [
-            { day: 150, label: 'Día 150: Caída de la Civilización', color: '#ef4444' },
-            { day: tDesc, label: `Día ${Math.round(tDesc)}: CDC / Descubrimiento`, color: '#84cc16' },
-            { day: 1277, label: 'Día 1277: Reinicio de Natalidad', color: '#d946ef' }
+            { day: 150, label: 'Día 150: Caída de la Civilización', color: '#dc2626' },
+            { day: tDesc, label: `Día ${Math.round(tDesc)}: Protocolo CDC`, color: '#84cc16' },
+            { day: 1277, label: 'Día 1277: Reanudación Natalidad', color: '#ca8a04' }
         ];
         
         ctx.save();
-        milestones.forEach(m => {
+        milestones.forEach((m, idx) => {
             const xPos = x.getPixelForValue(m.day);
             if (xPos >= left && xPos <= right) {
-                // Línea punteada vertical
+                // Dibujar línea punteada táctica
                 ctx.strokeStyle = m.color;
-                ctx.lineWidth = 1.5;
+                ctx.lineWidth = 1.2;
                 ctx.setLineDash([5, 5]);
                 ctx.beginPath();
                 ctx.moveTo(xPos, top);
                 ctx.lineTo(xPos, bottom);
                 ctx.stroke();
                 
-                // Texto de la etiqueta
+                // Dibujar etiqueta flotante
                 ctx.fillStyle = '#f8fafc';
-                ctx.font = 'bold 9px Fira Code';
-                ctx.setLineDash([]);
+                ctx.font = 'bold 9px "Fira Code", monospace';
+                ctx.setLineDash([]); // Quitar punteado para el texto
                 
+                // Desplazamiento vertical para evitar solapamientos
                 let textY = top + 15;
-                if (m.day === tDesc) textY = top + 35;
-                else if (m.day === 1277) textY = top + 55;
+                if (m.day === tDesc) textY = top + 32;
+                else if (m.day === 1277) textY = top + 49;
                 
-                ctx.fillText(m.label, xPos + 5, textY);
+                // Sombreado de fondo para legibilidad táctica
+                const textWidth = ctx.measureText(m.label).width;
+                ctx.fillStyle = 'rgba(7, 9, 7, 0.82)';
+                ctx.fillRect(xPos + 5, textY - 9, textWidth + 8, 12);
+                ctx.strokeStyle = 'rgba(132, 204, 22, 0.15)';
+                ctx.strokeRect(xPos + 5, textY - 9, textWidth + 8, 12);
+                
+                // Dibujar el texto del hito en color correspondiente
+                ctx.fillStyle = m.color;
+                ctx.fillText(m.label, xPos + 9, textY);
             }
         });
         ctx.restore();
     }
 };
 
-// Registrar el plugin en Chart.js
+// Registrar el plugin dinámico
 Chart.register(twdMilestonesPlugin);
 
-// Actualizar / Generar Gráfico Chart.js
+/**
+ * Actualizar / Generar Gráfico Chart.js
+ * Configura escala logarítmica para manejar la discrepancia masiva entre
+ * la población inicial mundial (6.9 mil millones) y la población final o de zombis.
+ */
 function updateChart() {
     if (!simData) return;
     
     const ctx = document.getElementById('twdChart').getContext('2d');
     
-    // Clampar los valores a mínimo 1.0 para evitar problemas matemáticos en escala logarítmica
+    // TRUCO MATEMÁTICO: En escala logarítmica de Chart.js, los valores <= 0
+    // colapsan la función. Clampar los valores a un mínimo de 1.0 evita errores de renderizado.
     const sClamped = simData.s.map(val => Math.max(1.0, val));
     const zClamped = simData.z.map(val => Math.max(1.0, val));
     
-    const chartData = {
-        labels: simData.time,
-        datasets: [
-            {
-                label: 'Sobrevivientes (Humanos)',
-                data: sClamped,
-                borderColor: '#38bdf8',
-                backgroundColor: 'rgba(56, 189, 248, 0.05)',
-                borderWidth: 2.5,
-                pointRadius: 0,
-                pointHoverRadius: 6,
-                tension: 0.1,
-                fill: false
-            },
-            {
-                label: 'Caminantes (Zombies)',
-                data: zClamped,
-                borderColor: '#ef4444',
-                backgroundColor: 'rgba(239, 68, 68, 0.05)',
-                borderWidth: 2.5,
-                pointRadius: 0,
-                pointHoverRadius: 6,
-                tension: 0.1,
-                fill: false
-            }
-        ]
-    };
+    // TRUCO VISUAL: Creación de gradientes verticales para curvas tácticas
+    const humanGradient = ctx.createLinearGradient(0, 0, 0, 350);
+    humanGradient.addColorStop(0, 'rgba(2, 132, 199, 0.22)');
+    humanGradient.addColorStop(1, 'rgba(2, 132, 199, 0.00)');
     
+    const zombieGradient = ctx.createLinearGradient(0, 0, 0, 350);
+    zombieGradient.addColorStop(0, 'rgba(220, 38, 38, 0.26)');
+    zombieGradient.addColorStop(1, 'rgba(220, 38, 38, 0.00)');
+    
+    const datasets = [
+        {
+            label: 'Sobrevivientes (Humanos Vivos)',
+            data: sClamped,
+            borderColor: '#0284c7',
+            backgroundColor: humanGradient,
+            borderWidth: 3,
+            pointRadius: 0,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: '#0284c7',
+            pointHoverBorderColor: '#ffffff',
+            tension: 0.4, // Curva suavizada premium
+            fill: true
+        },
+        {
+            label: 'Caminantes (Zombies Activos)',
+            data: zClamped,
+            borderColor: '#dc2626',
+            backgroundColor: zombieGradient,
+            borderWidth: 3,
+            pointRadius: 0,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: '#dc2626',
+            pointHoverBorderColor: '#ffffff',
+            tension: 0.4, // Curva suavizada premium
+            fill: true
+        }
+    ];
+    
+    // Si el gráfico ya existe, actualizar de forma fluida
     if (chart) {
         chart.data.datasets[0].data = sClamped;
         chart.data.datasets[1].data = zClamped;
+        chart.data.datasets[0].backgroundColor = humanGradient;
+        chart.data.datasets[1].backgroundColor = zombieGradient;
         chart.update();
         return;
     }
     
+    // Construir la instancia
     chart = new Chart(ctx, {
         type: 'line',
-        data: chartData,
+        data: {
+            labels: simData.time,
+            datasets: datasets
+        },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             plugins: {
                 legend: {
+                    position: 'top',
                     labels: {
                         color: '#f8fafc',
-                        font: { family: 'Outfit', size: 12 }
+                        font: { family: 'Oswald', size: 12, weight: '500' },
+                        boxWidth: 12,
+                        padding: 15
                     }
                 },
                 tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    titleFont: { family: 'Space Grotesk' },
-                    bodyFont: { family: 'Fira Code' },
+                    backgroundColor: 'rgba(14, 20, 15, 0.96)',
+                    titleColor: '#84cc16',
+                    titleFont: { family: 'Oswald', size: 12, weight: 'bold' },
+                    bodyFont: { family: 'Fira Code', size: 11 },
+                    borderColor: 'rgba(132, 204, 22, 0.25)',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: true,
+                    boxWidth: 8,
+                    boxPadding: 4,
                     callbacks: {
                         label: function(context) {
-                            return `${context.dataset.label.split(' ')[0]}: ${Math.round(context.raw).toLocaleString()} hab`;
+                            const name = context.dataset.label.split(' ')[0];
+                            const val = Math.round(context.raw);
+                            return `${name}: ${val.toLocaleString()} hab`;
                         },
                         title: function(context) {
-                            return `Día: ${Math.round(context[0].label)}`;
+                            return `TIEMPO: ${Math.round(context[0].label)} días (${(context[0].label/365).toFixed(1)} años)`;
                         }
                     }
                 }
@@ -247,38 +320,39 @@ function updateChart() {
                 x: {
                     type: 'linear',
                     min: 0,
-                    max: 4562,
-                    grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                    max: 4562, // 12.5 años de simulación en total
+                    grid: { color: 'rgba(255, 255, 255, 0.03)' },
                     ticks: {
-                        color: '#94a3b8',
-                        font: { family: 'Fira Code' }
+                        color: '#788a78',
+                        font: { family: 'Fira Code', size: 10 }
                     },
                     title: {
                         display: true,
-                        text: 'Días desde el brote inicial (Año 2010)',
-                        color: '#f8fafc',
-                        font: { family: 'Outfit', size: 13 }
+                        text: 'Días Transcurridos desde el Brote (Año 2010)',
+                        color: '#788a78',
+                        font: { family: 'Oswald', size: 12, weight: '500' }
                     }
                 },
                 y: {
-                    type: 'logarithmic',
+                    type: 'logarithmic', // Escala Logarítmica requerida
                     min: 10,
-                    grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                    grid: { color: 'rgba(255, 255, 255, 0.03)' },
                     ticks: {
-                        color: '#94a3b8',
-                        font: { family: 'Fira Code' },
-                        callback: function(value, index, ticks) {
-                            if (value >= 1e9) return (value / 1e9) + 'B';
-                            if (value >= 1e6) return (value / 1e6) + 'M';
+                        color: '#788a78',
+                        font: { family: 'Fira Code', size: 10 },
+                        callback: function(value) {
+                            // Abreviaturas para legibilidad en escala logarítmica
+                            if (value >= 1e9) return (value / 1e9) + 'B (Mil Millones)';
+                            if (value >= 1e6) return (value / 1e6) + 'M (Millones)';
                             if (value >= 1e3) return (value / 1e3) + 'K';
                             return value;
                         }
                     },
                     title: {
                         display: true,
-                        text: 'Población (Escala Logarítmica)',
-                        color: '#f8fafc',
-                        font: { family: 'Outfit', size: 13 }
+                        text: 'Fuerzas de Combate Poblacional',
+                        color: '#788a78',
+                        font: { family: 'Oswald', size: 12, weight: '500' }
                     }
                 }
             }
@@ -286,17 +360,21 @@ function updateChart() {
     });
 }
 
-// Actualizar textos reactivos en el log de operaciones
+/**
+ * Actualizar textos dinámicos en la bitácora clasificada
+ */
 function updateConsoleLogs(t_desc) {
     consoleItems.forEach((item) => {
         if (item.id === 'console-discovery') {
-            item.innerHTML = `<strong>Día ${Math.round(t_desc)}: CDC y Descubrimiento.</strong> La humanidad aprende a rematar el cerebro. Las muertes naturales reducen su tasa de reanimación del 100% al 5%.`;
+            item.innerHTML = `<strong>DÍA ${Math.round(t_desc)} [DESCUBRIMIENTO]:</strong> El CDC establece el protocolo del tallo cerebral. Tasa de reanimación por causas naturales cae del 100% al 5%.`;
         }
         item.classList.add('active');
     });
 }
 
-// Actualizar visualización en el paso temporal específico
+/**
+ * Actualizar indicadores visuales y barra de progreso del paso activo
+ */
 function updateVisualsAtStep(step) {
     if (!simData) return;
     
@@ -304,12 +382,33 @@ function updateVisualsAtStep(step) {
     const sVal = simData.s[step];
     const zVal = simData.z[step];
     
-    // Actualizar etiquetas de texto
+    // Actualizar recuadros informativos inferiores
     currentSimTime.textContent = `${Math.round(day)} días (${(day / 365).toFixed(1)} años)`;
-    currentHuman.textContent = Math.round(sClampedValue(sVal)).toLocaleString();
-    currentZombie.textContent = Math.round(zClampedValue(zVal)).toLocaleString();
+    currentHuman.textContent = Math.round(Math.max(0, sVal)).toLocaleString();
+    currentZombie.textContent = Math.round(Math.max(0, zVal)).toLocaleString();
     
-    // Mover indicador en el gráfico de Chart.js
+    // Sincronizar las barras decorativas de progreso bajo los sliders
+    const tdescPercent = ((sliderTdesc.value - sliderTdesc.min) / (sliderTdesc.max - sliderTdesc.min)) * 100;
+    const refugioPercent = ((sliderRefugio.value - sliderRefugio.min) / (sliderRefugio.max - sliderRefugio.min)) * 100;
+    const timelinePercent = (step / (simData.time.length - 1)) * 100;
+    
+    document.querySelector('.fill-tdesc').style.width = `${tdescPercent}%`;
+    document.querySelector('.fill-refugio').style.width = `${refugioPercent}%`;
+    document.querySelector('.fill-timeline').style.width = `${timelinePercent}%`;
+    
+    // Resaltar la bitácora activa basándonos en los umbrales de días
+    consoleItems.forEach(item => {
+        const threshold = parseFloat(item.getAttribute('data-threshold'));
+        
+        // Si el día simulado actual es superior al umbral de la bitácora, encender la alerta táctica
+        if (day >= threshold) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Desplazar el punto activo sincronizado del gráfico
     if (chart) {
         chart.setActiveElements([
             { datasetIndex: 0, index: step },
@@ -319,15 +418,9 @@ function updateVisualsAtStep(step) {
     }
 }
 
-// Clamper auxiliares para visualización
-function sClampedValue(val) {
-    return Math.max(0, val);
-}
-function zClampedValue(val) {
-    return Math.max(0, val);
-}
-
-// Controlar reproducción de la animación
+/**
+ * Iniciar/Pausar la reproducción del simulador militar
+ */
 function togglePlayback() {
     if (isPlaying) {
         pausePlayback();
@@ -336,30 +429,36 @@ function togglePlayback() {
     }
 }
 
+/**
+ * Loop de reproducción animada de 50ms por paso
+ */
 function startPlayback() {
     isPlaying = true;
-    playBtn.innerHTML = '&#10074;&#10074;'; // Icono pausa
+    playBtn.innerHTML = '<span class="play-icon">&#10074;&#10074;</span>'; // Icono de Pausa
     
     const run = () => {
         if (!isPlaying) return;
         
-        currentStep++;
+        currentStep += 2; // Avanzar de dos en dos días para agilizar la reproducción de los 4562 pasos
         if (currentStep >= simData.time.length) {
-            currentStep = 0;
+            currentStep = 0; // Bucle
         }
         
         timelineSlider.value = currentStep;
         updateVisualsAtStep(currentStep);
         
-        animationId = setTimeout(run, 50); // 50ms por paso
+        animationId = setTimeout(run, 40);
     };
     
     run();
 }
 
+/**
+ * Pausar animación de reproducción
+ */
 function pausePlayback() {
     isPlaying = false;
-    playBtn.innerHTML = '&#9654;'; // Icono play
+    playBtn.innerHTML = '<span class="play-icon">&#9654;</span>'; // Icono de Play
     if (animationId) {
         clearTimeout(animationId);
         animationId = null;

@@ -1,17 +1,36 @@
-/* Importar tipografía moderna */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap');
+/* ==========================================================================
+   ESTILOS PREMIUM TÉRMICOS - ENFRIAMIENTO DE NEWTON (PIZZA)
+   Diseño termo-sensible, vapor animado, panel esmerilado y termómetro de precisión.
+   ========================================================================== */
+
+/* Importación de tipografías premium */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
-    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-    --panel-bg: rgba(30, 41, 59, 0.7);
-    --border-color: rgba(255, 255, 255, 0.1);
+    /* Paleta Térmica de Fuego y Hielo */
+    --thermal-bg: #090b11;
+    --thermal-bg-grad: radial-gradient(circle at 50% 50%, #151421 0%, #08080f 100%);
+    --panel-bg: rgba(18, 20, 32, 0.74);
+    --border-color: rgba(249, 115, 22, 0.15); /* Borde cálido de disipación */
+    --panel-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(249, 115, 22, 0.04);
+    
     --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
+    --text-secondary: #8b95a5;
+
+    /* Acentos Térmicos */
+    --hot-color: #ef4444;          /* Rojo calor */
+    --warm-color: #f97316;         /* Naranja disipación */
+    --cold-color: #38bdf8;         /* Azul frío ambiente */
     --accent-color: #f97316;
-    --accent-glow: rgba(249, 115, 22, 0.4);
-    --pizza-heat: 1; /* Valor entre 0 (frio) y 1 (caliente) */
+    --accent-glow: rgba(249, 115, 22, 0.35);
+
+    /* Variables dinámicas pasadas vía JS */
+    --pizza-heat: 1.0;            /* Factor entre 0 (fresco) y 1 (caliente) */
+    --thermometer-height: 60%;     /* Altura del fluido del termómetro */
+    --thermometer-color: #ef4444;  /* Color del fluido según la temperatura */
 }
 
+/* Reset y configuraciones generales */
 * {
     margin: 0;
     padding: 0;
@@ -20,49 +39,151 @@
 }
 
 body {
-    background: var(--bg-gradient);
+    background: var(--thermal-bg);
+    background-image: var(--thermal-bg-grad);
     color: var(--text-primary);
     min-height: 100vh;
-    padding: 2rem;
+    padding: 1.5rem;
     overflow-x: hidden;
+    position: relative;
 }
 
-.container {
+/* Resplandor térmico de fondo */
+.thermal-glow {
+    position: fixed;
+    top: -10%;
+    right: -10%;
+    width: 40%;
+    height: 40%;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.05) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(40px);
+}
+
+.font-mono {
+    font-family: 'Fira Code', monospace !important;
+}
+
+/* Navegación Superior */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0 auto 1.5rem auto;
+    padding: 0 1rem;
 }
 
-/* Header */
-header {
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--warm-color);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    border-radius: 9999px;
+    background: rgba(249, 115, 22, 0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-link:hover {
+    background: rgba(249, 115, 22, 0.12);
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.25);
+    transform: translateX(-2px);
+}
+
+.back-arrow {
+    transition: transform 0.25s ease;
+}
+
+.back-link:hover .back-arrow {
+    transform: translateX(-3px);
+}
+
+.sensor-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--cold-color);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+.sensor-icon {
+    font-size: 1rem;
+    animation: sensorBlink 2s infinite alternate;
+}
+
+@keyframes sensorBlink {
+    0% { opacity: 0.5; filter: drop-shadow(0 0 1px var(--cold-color)); }
+    100% { opacity: 1; filter: drop-shadow(0 0 8px var(--cold-color)); }
+}
+
+/* ==========================================================================
+   ENCABEZADO TÉRMICO CON GRADIENTE DE CALOR
+   ========================================================================== */
+.thermal-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
-header h1 {
+.thermal-badge {
+    display: inline-block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    color: var(--warm-color);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    background: rgba(249, 115, 22, 0.05);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.6rem;
+    font-weight: bold;
+}
+
+.thermal-header h1 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 2.8rem;
     font-weight: 800;
-    background: linear-gradient(to right, #f97316, #f43f5e);
+    background: linear-gradient(to right, var(--hot-color), var(--warm-color), var(--cold-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.04em;
 }
 
-header p {
+.header-divider {
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(to right, var(--hot-color), var(--cold-color));
+    margin: 0.8rem auto;
+}
+
+.thermal-subtitle {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
+    font-family: 'Fira Code', monospace;
 }
 
-/* Tabs */
+/* ==========================================================================
+   TABS DE CONTROL
+   ========================================================================== */
 .tabs-container {
     display: flex;
     justify-content: center;
+    gap: 0.6rem;
     margin-bottom: 2rem;
-    background: rgba(15, 23, 42, 0.5);
-    padding: 0.4rem;
+    background: rgba(15, 17, 30, 0.6);
+    padding: 0.35rem;
     border-radius: 9999px;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     max-width: fit-content;
     margin-left: auto;
     margin-right: auto;
@@ -72,12 +193,16 @@ header p {
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
+    padding: 0.75rem 1.8rem;
+    font-size: 0.88rem;
+    font-weight: 700;
     cursor: pointer;
     border-radius: 9999px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.02em;
 }
 
 .tab-btn:hover {
@@ -85,151 +210,338 @@ header p {
 }
 
 .tab-btn.active {
-    background: var(--accent-color);
-    color: white;
-    box-shadow: 0 4px 14px var(--accent-glow);
+    background: linear-gradient(135deg, var(--hot-color) 0%, var(--warm-color) 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px var(--accent-glow);
 }
 
-/* Tab Content */
 .tab-content {
     display: none;
-    animation: fadeIn 0.5s ease;
+    animation: thermalFadeIn 0.4s ease-out;
 }
 
 .tab-content.active {
     display: block;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes thermalFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Glassmorphism Panel */
+/* ==========================================================================
+   PANEL GLASSMORPHISM
+   ========================================================================== */
 .panel {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-radius: 24px;
+    border-radius: 20px;
     padding: 2rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: var(--panel-glow);
+    position: relative;
+}
+
+/* Decoración superior sutil térmica */
+.panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, var(--hot-color), var(--cold-color));
+    border-radius: 20px 20px 0 0;
 }
 
 /* Grid Layout */
 .simulation-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
+    grid-template-columns: 1fr 1.4fr;
     gap: 2rem;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
     .simulation-grid {
         grid-template-columns: 1fr;
     }
 }
 
-/* Left controls */
 .controls-column {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
+.panel-section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.title-decor {
+    color: var(--hot-color);
+    font-family: monospace;
+}
+
+.panel-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   SLIDERS TERMICOS ESTILIZADOS
+   ========================================================================== */
 .control-group {
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
+    background: rgba(10, 12, 22, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
     padding: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.control-group:hover {
+    border-color: rgba(249, 115, 22, 0.25);
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.03);
 }
 
 .control-label {
     display: flex;
     justify-content: space-between;
+    font-size: 0.9rem;
     font-weight: 600;
     margin-bottom: 0.8rem;
-    font-size: 0.95rem;
+}
+
+.label-name {
     color: var(--text-primary);
 }
 
 .control-val {
-    color: var(--accent-color);
+    color: var(--warm-color);
     font-family: 'Space Grotesk', sans-serif;
+    font-weight: bold;
+}
+
+/* Estilo del slider de entrada */
+.slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 input[type="range"] {
     -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
     outline: none;
+    z-index: 2;
 }
 
+/* Tirador (Thumb) del Slider */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
+    appearance: none;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: var(--warm-color);
+    border: 2px solid var(--thermal-bg);
     cursor: pointer;
-    box-shadow: 0 0 10px var(--accent-glow);
-    transition: transform 0.1s ease;
+    box-shadow: 0 0 8px var(--accent-glow);
+    transition: all 0.15s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
     transform: scale(1.2);
+    background: #ffffff;
+    box-shadow: 0 0 12px #ffffff;
 }
 
-/* Right visualization */
-.visualization-column {
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--warm-color);
+    border: 2px solid var(--thermal-bg);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--accent-glow);
+    transition: all 0.15s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* Sliders con colores térmicos personalizados */
+#slider-t0::-webkit-slider-thumb {
+    background: var(--hot-color);
+    box-shadow: 0 0 8px var(--hot-color);
+}
+#slider-t0::-moz-range-thumb {
+    background: var(--hot-color);
+}
+
+#slider-tm::-webkit-slider-thumb {
+    background: var(--cold-color);
+    box-shadow: 0 0 8px var(--cold-color);
+}
+#slider-tm::-moz-range-thumb {
+    background: var(--cold-color);
+}
+
+.slider-indicators {
     display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
 }
 
-.graph-container {
-    height: 350px;
+/* ==========================================================================
+   VISUALIZADOR TÉRMICO FUSIONADO (PIZZA + TERMOMETRO)
+   ========================================================================== */
+.thermal-visualizer-container {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1rem;
+    align-items: center;
+    background: rgba(10, 12, 22, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 1.5rem;
+    height: 250px;
     position: relative;
 }
 
-/* Pizza Animation container */
+/* 🌡️ Termómetro Dinámico de Vidrio */
+.thermometer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 100%;
+    justify-content: flex-end;
+    padding-bottom: 5px;
+}
+
+/* Escala numérica del termómetro */
+.thermometer-scale {
+    position: absolute;
+    left: -5px;
+    top: 5px;
+    height: 145px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    text-align: right;
+    width: 25px;
+}
+
+.thermometer-glass {
+    width: 14px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+    margin-bottom: -1px;
+    z-index: 2;
+}
+
+/* Columna de fluido termoreactiva controlada por JS */
+.thermometer-fluid {
+    width: 100%;
+    height: var(--thermometer-height);
+    background: var(--thermometer-color);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 0 10px var(--thermometer-color);
+    transition: height 0.4s ease, background 0.4s ease;
+}
+
+/* Bulbo circular inferior del termómetro */
+.thermometer-bulb {
+    width: 26px;
+    height: 26px;
+    background: var(--thermometer-color);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    z-index: 1;
+    box-shadow: 0 0 12px var(--thermometer-color);
+    transition: background 0.4s ease;
+}
+
+/* Contenedor de la pizza */
 .pizza-container {
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
-    background: rgba(15, 23, 42, 0.3);
-    border-radius: 16px;
     position: relative;
-    overflow: hidden;
-    height: 220px;
+    height: 100%;
 }
 
-/* SVG Pizza Slice Styling */
+.temp-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(18, 20, 32, 0.85);
+    border: 1px solid var(--warm-color);
+    color: var(--warm-color);
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.15);
+    z-index: 10;
+}
+
+/* Animación y color de Pizza */
 .pizza-svg {
-    width: 140px;
-    height: 140px;
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
-    transition: transform 0.5s ease;
+    width: 145px;
+    height: 145px;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+    transition: transform 0.3s ease;
+    z-index: 2;
 }
 
-/* Dinámicamente cambia el color del queso por calor */
+.pizza-svg:hover {
+    transform: scale(1.05) rotate(2deg);
+}
+
+/* Cambia el color del queso por disipación térmica (Interpolación de color) */
 .pizza-cheese {
-    /* Interpolación CSS usando el valor de calor */
+    /* queso fundido cálido a pálido */
     fill: rgb(
-        calc(250 - (1 - var(--pizza-heat)) * 25), 
-        calc(100 + var(--pizza-heat) * 100), 
-        calc(30 + var(--pizza-heat) * 10)
+        calc(255 - (1 - var(--pizza-heat)) * 30), 
+        calc(120 + var(--pizza-heat) * 115), 
+        calc(35 + var(--pizza-heat) * 15)
     );
     transition: fill 0.4s ease;
 }
 
-/* Salsa de tomate burbujeante */
+/* Cambia el color de la salsa */
 .pizza-sauce {
     fill: rgb(
-        calc(180 + var(--pizza-heat) * 40), 
-        calc(30 - var(--pizza-heat) * 10), 
+        calc(170 + var(--pizza-heat) * 65), 
+        calc(30 - var(--pizza-heat) * 15), 
         15
     );
     transition: fill 0.4s ease;
@@ -238,60 +550,81 @@ input[type="range"]::-webkit-slider-thumb:hover {
 /* Humo/Vapor animado */
 .steam-container {
     position: absolute;
-    bottom: 50%;
+    bottom: 52%;
+    left: calc(50% - 35px);
     display: flex;
     justify-content: space-around;
-    width: 80px;
+    width: 70px;
     opacity: var(--pizza-heat);
     transition: opacity 0.5s ease;
+    z-index: 3;
+    pointer-events: none;
 }
 
 .steam-line {
     width: 3px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.4);
+    height: 35px;
+    background: rgba(255, 255, 255, 0.35);
     border-radius: 50%;
     filter: blur(2px);
-    animation: steam 2s infinite ease-out;
+    animation: steam 2.2s infinite ease-out;
 }
 
 .steam-line:nth-child(2) {
-    animation-delay: 0.6s;
-    height: 50px;
+    animation-delay: 0.7s;
+    height: 45px;
 }
 
 .steam-line:nth-child(3) {
-    animation-delay: 1.2s;
-    height: 35px;
+    animation-delay: 1.4s;
+    height: 32px;
 }
 
 @keyframes steam {
     0% {
-        transform: translateY(10px) scaleX(1);
+        transform: translateY(12px) scaleX(1);
         opacity: 0;
     }
     30% {
-        opacity: 0.6;
-        transform: translateY(-10px) scaleX(1.5);
+        opacity: 0.55;
+        transform: translateY(-8px) scaleX(1.4);
     }
     100% {
-        transform: translateY(-40px) scaleX(0.5);
+        transform: translateY(-35px) scaleX(0.4);
         opacity: 0;
     }
 }
 
-/* Playback Control (Timeline Slider) */
+/* ==========================================================================
+   GRAFICA Y TIMELINE
+   ========================================================================== */
+.visualization-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.graph-container {
+    height: 320px;
+    position: relative;
+    background: rgba(10, 12, 22, 0.4);
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
 .timeline-panel {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    margin-top: 1rem;
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 1.2rem;
+    background: rgba(10, 12, 22, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 1rem;
 }
 
 .play-btn {
-    background: var(--accent-color);
+    background: linear-gradient(135deg, var(--hot-color) 0%, var(--warm-color) 100%);
     border: none;
     width: 44px;
     height: 44px;
@@ -301,45 +634,72 @@ input[type="range"]::-webkit-slider-thumb:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
     box-shadow: 0 4px 10px var(--accent-glow);
     transition: all 0.2s ease;
 }
 
 .play-btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 
-/* Tab 2: Math and solution style */
+.timeline-control-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.timeline-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timeline-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.timeline-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+    background: var(--warm-color);
+    box-shadow: 0 0 8px var(--warm-color);
+}
+.timeline-slider-wrapper input[type="range"]::-moz-range-thumb {
+    background: var(--warm-color);
+}
+
+/* ==========================================================================
+   SECCION TEORICA (TAB 2)
+   ========================================================================== */
 .math-section {
     line-height: 1.8;
-    font-size: 1.1rem;
-    color: #cbd5e1;
+    color: #b1b9c7;
 }
 
 .math-section h2 {
     font-family: 'Space Grotesk', sans-serif;
     color: var(--text-primary);
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
 }
 
 .math-section h3 {
-    color: var(--accent-color);
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--warm-color);
     margin-top: 1.8rem;
     margin-bottom: 0.8rem;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
 }
 
 .math-card {
-    background: rgba(15, 23, 42, 0.3);
+    background: rgba(10, 12, 22, 0.5);
     border-radius: 12px;
     padding: 1.5rem;
-    margin: 1.5rem 0;
-    border-left: 4px solid var(--accent-color);
-    font-family: monospace;
+    margin: 1.2rem 0;
+    border-left: 4px solid var(--warm-color);
     overflow-x: auto;
 }
 
@@ -350,24 +710,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .variable-list li {
     margin-bottom: 0.5rem;
+    font-size: 0.95rem;
 }
 
 .variable-list strong {
-    color: var(--text-primary);
-}
-
-/* Indicador de temperatura en tiempo real en la pizza */
-.temp-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid var(--accent-color);
-    color: var(--text-primary);
-    padding: 0.4rem 1rem;
-    border-radius: 9999px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: bold;
-    font-size: 1.1rem;
-    box-shadow: 0 0 10px var(--accent-glow);
+    color: #ffffff;
 }

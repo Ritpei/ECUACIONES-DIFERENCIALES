@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modelo SIR - Propagación del Virus WannaCry - Simulador EDO</title>
+    <title>S.I.R. WANNA-CRY MONIT - Cyber Defense Hub</title>
     
     <!-- CSS Estilos Premium y Cyberpunk -->
     <link rel="stylesheet" href="{{ url_for('virus.static', filename='css/style.css') }}">
@@ -15,23 +15,38 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
 </head>
 <body>
-    <div style="padding: 1rem 0 0 1rem; max-width: 1200px; margin: 0 auto;">
-        <a href="/" style="color: var(--accent-color); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
-            &larr; Volver al Menú Principal
+    <!-- Efecto decorativo de rejilla cyber y scanlines -->
+    <div class="cyber-grid"></div>
+    <div class="scanlines"></div>
+
+    <div class="top-nav">
+        <a href="/" class="back-link">
+            <span class="back-arrow">&larr;</span> 
+            <span class="back-text">TERMINAL_CENTRAL // REGRESAR</span>
         </a>
+        <div class="terminal-status">
+            <span class="status-dot pulsing"></span>
+            <span class="status-text">SECURE_CONNECTION // ONLINE</span>
+        </div>
     </div>
 
     <div class="container">
         <!-- Encabezado de la página -->
-        <header>
-            <h1>Monitoreo SIR: Epidemia Digital WannaCry (2017)</h1>
-            <p>Simulador epidemiológico de malware basado en ecuaciones diferenciales acopladas resueltas con RK4</p>
+        <header class="cyber-header">
+            <div class="cyber-badge">SYSTEM MONITOR // DEPT OF COMPUTER EPIDEMIOLOGY</div>
+            <h1 class="cyber-title" data-text="EPIDEMIA WANNA-CRY (2017)">EPIDEMIA WANNA-CRY (2017)</h1>
+            <div class="header-divider"></div>
+            <p class="cyber-subtitle">// Simulador SIR de propagación de malware autorreplicante (tipo gusano) resuelto con RK4</p>
         </header>
 
         <!-- Selector de Pestañas (Tabs) -->
         <div class="tabs-container">
-            <button class="tab-btn active" data-tab="simulacion">Simulación Interactiva</button>
-            <button class="tab-btn" data-tab="modelo">Modelo y Solución</button>
+            <button class="tab-btn active" data-tab="simulacion">
+                <span class="tab-icon">⚙</span> SIMULACIÓN INTERACTIVA
+            </button>
+            <button class="tab-btn" data-tab="modelo">
+                <span class="tab-icon">λ</span> MODELO MATEMÁTICO
+            </button>
         </div>
 
         <!-- Pestaña 1: Simulación Interactiva -->
@@ -39,47 +54,76 @@
             <div class="panel simulation-grid">
                 <!-- Columna Izquierda: Sliders y Línea de Tiempo de Hitos Históricos -->
                 <div class="controls-column">
-                    <h2>Configuración de Red</h2>
-                    <p style="color: var(--text-secondary); font-size: 0.9rem; font-family: 'Fira Code', monospace;">
-                        Simulación sobre una subred de N = 100,000 computadoras expuestas a Internet.
+                    <div class="panel-section-title">
+                        <span class="title-decor">//</span> Parámetros de Red y Vector de Ataque
+                    </div>
+                    
+                    <p class="panel-description">
+                        Simulación de propagación sobre una subred corporativa de <strong>N = 100,000</strong> equipos expuestos directamente a Internet.
                     </p>
 
                     <!-- Control: Tasa de Contagio (Beta) -->
                     <div class="control-group">
                         <div class="control-label">
-                            <span>Tasa de Contagio / Día (β)</span>
-                            <span class="control-val" id="val-beta">0.85</span>
+                            <span class="label-name">Tasa de Contagio / Día (β)</span>
+                            <span class="control-val font-mono" id="val-beta">0.85</span>
                         </div>
-                        <input type="range" id="slider-beta" min="0.10" max="2.00" step="0.05" value="0.85">
+                        <div class="slider-wrapper">
+                            <input type="range" id="slider-beta" min="0.10" max="2.00" step="0.05" value="0.85">
+                            <div class="slider-fill fill-beta"></div>
+                        </div>
+                        <div class="slider-indicators">
+                            <span>0.10 (Lento)</span>
+                            <span>2.00 (Agresivo)</span>
+                        </div>
                     </div>
 
                     <!-- Control: Tasa de Parcheo / Recuperación (Gamma) -->
                     <div class="control-group">
                         <div class="control-label">
-                            <span>Tasa de Parcheo / Día (γ)</span>
-                            <span class="control-val" id="val-gamma">0.15</span>
+                            <span class="label-name">Tasa de Parcheo / Día (γ)</span>
+                            <span class="control-val font-mono" id="val-gamma">0.15</span>
                         </div>
-                        <input type="range" id="slider-gamma" min="0.01" max="1.00" step="0.05" value="0.15">
+                        <div class="slider-wrapper">
+                            <input type="range" id="slider-gamma" min="0.01" max="1.00" step="0.05" value="0.15">
+                            <div class="slider-fill fill-gamma"></div>
+                        </div>
+                        <div class="slider-indicators">
+                            <span>0.01 (Bajo)</span>
+                            <span>1.00 (Inmediato)</span>
+                        </div>
                     </div>
 
                     <!-- Terminal de Hitos Históricos (Storytelling) -->
                     <div class="events-panel">
                         <div class="events-title">
-                            <span>REGISTRO DE HITOS WANNA CRY</span>
-                            <span style="font-size: 0.8rem; opacity: 0.7;">HISTORIAL</span>
+                            <span class="console-icon">📡</span>
+                            <span class="title-text">LOG DE HITOS REALES // WANNA-CRY (2017)</span>
                         </div>
                         <ul class="event-list">
                             <li class="event-item" data-start="0.0" data-end="1.0">
-                                <strong>Día 0 (12 Mayo):</strong> Liberación de WannaCry explotando la vulnerabilidad SMB EternalBlue. Infecciones primarias en hospitales del Reino Unido y empresas telefónicas.
+                                <span class="event-bullet font-mono">DÍA 0.0</span>
+                                <div class="event-body">
+                                    <strong>Liberación (12 Mayo):</strong> Explotación global del protocolo SMBv1 vía EternalBlue. Hospitales del NHS y Telefónica caen comprometidos.
+                                </div>
                             </li>
                             <li class="event-item" data-start="1.0" data-end="2.0">
-                                <strong>Día 1 (13 Mayo):</strong> Propagación masiva mundial de carácter autorreplicable (worm). Más de 200,000 equipos infectados en 150 países.
+                                <span class="event-bullet font-mono">DÍA 1.0</span>
+                                <div class="event-body">
+                                    <strong>Propagación Crítica:</strong> El gusano se autorreplica a velocidad récord por redes locales. 200,000 computadoras cifradas en minutos.
+                                </div>
                             </li>
                             <li class="event-item" data-start="2.0" data-end="5.0">
-                                <strong>Día 2 (14 Mayo):</strong> Activación accidental del "Kill-Switch" por Marcus Hutchins. Microsoft lanza parches de emergencia. Aumento exponencial en la tasa de parcheo (Recuperados R).
+                                <span class="event-bullet font-mono">DÍA 2.0</span>
+                                <div class="event-body">
+                                    <strong>Freno Kill-Switch:</strong> Marcus Hutchins registra el dominio de bloqueo. Microsoft lanza parches fuera de ciclo. Incrementa la recuperación (R).
+                                </div>
                             </li>
                             <li class="event-item" data-start="5.0" data-end="11.0">
-                                <strong>Día 5+:</strong> Brote bajo control y mitigación global. Las infecciones activas caen y la red entra en estado de recuperación permanente.
+                                <span class="event-bullet font-mono">DÍA 5.0+</span>
+                                <div class="event-body">
+                                    <strong>Mitigación:</strong> Curva de infecciones activas cae drásticamente. Vacunación sistemática y actualización del sistema operativo.
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -90,33 +134,51 @@
                     <!-- Paneles de Métricas del Modelo SIR -->
                     <div class="sir-metrics">
                         <div class="sir-box s-box">
-                            <span class="sir-title">S (Susceptibles)</span>
+                            <div class="sir-header">
+                                <span class="sir-dot"></span>
+                                <span class="sir-title">Susceptibles (S)</span>
+                            </div>
                             <span class="sir-value" id="val-s">99,999</span>
+                            <span class="sir-description">Equipos vulnerables</span>
                         </div>
                         <div class="sir-box i-box">
-                            <span class="sir-title">I (Infectados)</span>
+                            <div class="sir-header">
+                                <span class="sir-dot pulsing"></span>
+                                <span class="sir-title">Infectados (I)</span>
+                            </div>
                             <span class="sir-value" id="val-i">1</span>
+                            <span class="sir-description">Cifrado de archivos activo</span>
                         </div>
                         <div class="sir-box r-box">
-                            <span class="sir-title">R (Parcheados)</span>
+                            <div class="sir-header">
+                                <span class="sir-dot"></span>
+                                <span class="sir-title">Parcheados (R)</span>
+                            </div>
                             <span class="sir-value" id="val-r">0</span>
+                            <span class="sir-description">Protegidos / Kill-Switch</span>
                         </div>
                     </div>
 
                     <!-- Contenedor del Gráfico -->
                     <div class="graph-container">
+                        <div class="chart-backdrop"></div>
                         <canvas id="sirChart"></canvas>
                     </div>
 
                     <!-- Barra de Reproducción Temporal -->
                     <div class="timeline-panel">
-                        <button class="play-btn" id="play-btn">&#9654;</button>
-                        <div style="flex-grow: 1;">
-                            <div class="control-label">
-                                <span>Línea del Tiempo de Infección</span>
-                                <span class="control-val" id="current-sim-day">0.0 días</span>
+                        <button class="play-btn" id="play-btn" aria-label="Reproducir simulación">
+                            <span class="play-icon">&#9654;</span>
+                        </button>
+                        <div class="timeline-control-container">
+                            <div class="timeline-meta">
+                                <span class="timeline-label">// LÍNEA DE TIEMPO DEL BROTE DIGITAL</span>
+                                <span class="control-val font-mono" id="current-sim-day">0.0 días</span>
                             </div>
-                            <input type="range" id="timeline-slider" min="0" max="100" value="0" style="width: 100%;">
+                            <div class="slider-wrapper timeline-slider-wrapper">
+                                <input type="range" id="timeline-slider" min="0" max="100" value="0">
+                                <div class="slider-fill fill-timeline"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -126,13 +188,13 @@
         <!-- Pestaña 2: Modelo Matemático y Solución -->
         <div id="modelo" class="tab-content">
             <div class="panel math-section">
-                <h2>Modelo Epidemiológico SIR de Kermack-McKendrick</h2>
+                <h2><span class="title-decor">//</span> Modelo SIR de Propagación de Malware</h2>
                 <p>
-                    Para simular la propagación de WannaCry, se utiliza el clásico **Modelo SIR**, originalmente formulado para enfermedades biológicas, pero idóneo para modelar virus informáticos con capacidades de gusano que se propagan de forma autónoma.
+                    Para emular matemáticamente el brote de WannaCry se adapta el clásico modelo epidemiológico <strong>SIR (Susceptibles - Infectados - Recuperados)</strong> propuesto por Kermack y McKendrick. En este contexto informático, el contagio representa la replicación autónoma del gusano a través del puerto TCP 445 (SMB) y la recuperación representa la instalación del parche MS17-010 de Windows o la inactivación mediante el dominio Kill-Switch.
                 </p>
 
                 <h3>Ecuaciones Diferenciales Ordinarias (EDOs) Acopladas</h3>
-                <p>El modelo consiste en un sistema acoplado no lineal de tres EDOs de primer orden:</p>
+                <p>El sistema dinámico de la epidemia digital está dado por:</p>
                 <div class="math-card">
                     $$\begin{align*}
                     \frac{dS}{dt} &= -\frac{\beta S I}{N} \\
@@ -141,31 +203,37 @@
                     \end{align*}$$
                 </div>
 
-                <p>Donde las variables y los parámetros del modelo se definen como:</p>
+                <p>Donde las variables y los coeficientes dinámicos se definen como:</p>
                 <ul class="variable-list">
-                    <li><strong class="cyan">\(S(t)\)</strong>: Computadoras susceptibles que están desprotegidas (tienen abierto el puerto 445 y carecen del parche de seguridad de Microsoft).</li>
-                    <li><strong class="red">\(I(t)\)</strong>: Computadoras infectadas activamente por WannaCry, cifrando archivos e intentando infectar a otros nodos de la red.</li>
-                    <li><strong class="green">\(R(t)\)</strong>: Computadoras recuperadas/parcheadas. Incluye equipos que han instalado el parche de Windows MS17-010 o cuya propagación ha sido prevenida por el dominio Kill-Switch.</li>
-                    <li><strong>\(N\)</strong>: Población total de equipos conectados (\(N = S + I + R\)).</li>
-                    <li><strong>\(\beta\)</strong>: Tasa de contagio, que mide la tasa de transmisión SMB por equipo infectado por día.</li>
-                    <li><strong>\(\gamma\)</strong>: Tasa de recuperación, que representa la frecuencia diaria con la que los equipos infectados son restaurados y parcheados.</li>
+                    <li><strong class="cyan-text font-mono">S(t)</strong>: Computadoras vulnerables sin parche de seguridad que se encuentran expuestas.</li>
+                    <li><strong class="red-text font-mono">I(t)</strong>: Computadoras con infección activa ejecutando WannaCry y buscando propagarse.</li>
+                    <li><strong class="green-text font-mono">R(t)</strong>: Sistemas recuperados, inmunizados o desactivados por el freno de control.</li>
+                    <li><strong class="accent-text font-mono">β (Beta)</strong>: Frecuencia de infección diaria (tasa de contacto efectivo por unidad de tiempo).</li>
+                    <li><strong class="accent-text font-mono">γ (Gamma)</strong>: Tasa diaria de parcheo / recuperación.</li>
                 </ul>
 
-                <h3>Inexistencia de Solución Analítica en Forma Cerrada</h3>
+                <h3>Solución Numérica con Método Runge-Kutta 4 (RK4)</h3>
                 <p>
-                    A diferencia del enfriamiento de Newton o el crecimiento logístico, el sistema SIR **no posee una solución analítica exacta en términos de funciones elementales**. Esto se debe a la no linealidad del término de interacción \(\beta S I\).
+                    Debido a la no linealidad en el término de contagio \(\beta S I\), el sistema no admite una solución exacta en términos de funciones continuas estándar. Por tanto, el simulador del backend ejecuta un **algoritmo Runge-Kutta de 4º Orden (RK4)** para aproximar las trayectorias de forma precisa:
                 </p>
-                <p>
-                    Por esta razón, la única forma de evaluar la dinámica del brote es mediante **métodos numéricos iterativos**. En este proyecto se utiliza el método de **Runge-Kutta de 4to Orden (RK4)** adaptado para vectores de estado tridimensionales, lo que garantiza errores locales insignificantes en el modelado.
-                </p>
+                <div class="math-card font-mono">
+                    k₁ = f(t_n, y_n) <br>
+                    k₂ = f(t_n + h/2, y_n + h/2 * k₁) <br>
+                    k₃ = f(t_n + h/2, y_n + h/2 * k₂) <br>
+                    k₄ = f(t_n + h, y_n + h * k₃) <br>
+                    y_{n+1} = y_n + h/6 * (k₁ + 2k₂ + 2k₃ + k₄)
+                </div>
 
-                <h3>Número de Reproducción Básico (\(R_0\))</h3>
+                <h3>Número de Infección Básico (R₀)</h3>
                 <p>
-                    Un concepto clave en epidemiología es el **Número de Reproducción Básico**, denotado como \(R_0\). Para el modelo SIR se define como:
+                    El factor fundamental de propagación epidémica se calcula como:
                 </p>
                 <div class="math-card">
                     $$R_0 = \frac{\beta}{\gamma}$$
                 </div>
+                <p>
+                    Si \(R_0 > 1\), el malware se propagará exponencialmente en la red causando un brote masivo. Si \(R_0 \le 1\), el virus morirá gradualmente sin causar epidemia digital.
+                </p>
             </div>
         </div>
     </div>

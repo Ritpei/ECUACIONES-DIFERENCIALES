@@ -1,21 +1,37 @@
-/* Importar tipografía moderna */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap');
+/* ==========================================================================
+   ESTILOS PREMIUM CYBERPUNK - MODELO SIR WANNA-CRY
+   Diseño de vanguardia con Glassmorphism, efectos de neón y retro-terminal.
+   ========================================================================== */
+
+/* Importar tipografías de alto impacto desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;500;700&display=swap');
 
 :root {
-    --bg-gradient: linear-gradient(135deg, #090514 0%, #020617 100%);
-    --panel-bg: rgba(15, 23, 42, 0.75);
-    --border-color: rgba(147, 51, 234, 0.15); /* Purple neon border */
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
+    /* Paleta Cyberpunk Principal */
+    --cyber-bg: #040508;
+    --cyber-bg-grad: radial-gradient(circle at 50% 50%, #0d0e15 0%, #040508 100%);
+    --panel-bg: rgba(11, 14, 23, 0.72);
+    --panel-border: 1px solid rgba(0, 240, 255, 0.18);
+    --panel-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.65), 0 0 15px rgba(0, 240, 255, 0.05);
+
+    /* Colores de Estados Epidémicos (SIR) */
+    --susceptible-color: #00f0ff; /* Cian fluorescente */
+    --susceptible-glow: rgba(0, 240, 255, 0.4);
     
-    /* Colores Específicos SIR */
-    --susceptible-color: #06b6d4; /* Cian */
-    --infected-color: #ef4444;    /* Rojo */
-    --recovered-color: #10b981;   /* Verde Esmeralda */
-    --accent-color: #a855f7;      /* Púrpura */
-    --accent-glow: rgba(168, 85, 247, 0.35);
+    --infected-color: #ff0055;    /* Magenta eléctrico / Neon Rose */
+    --infected-glow: rgba(255, 0, 85, 0.4);
+    
+    --recovered-color: #00ff66;   /* Verde neón matricial */
+    --recovered-glow: rgba(0, 255, 102, 0.4);
+
+    /* Acentos del Dashboard */
+    --accent-color: #a855f7;      /* Violeta cibernético */
+    --accent-glow: rgba(168, 85, 247, 0.4);
+    --text-primary: #f1f5f9;      /* Blanco pizarra */
+    --text-secondary: #64748b;    /* Gris atenuado */
 }
 
+/* Reset y configuraciones básicas */
 * {
     margin: 0;
     padding: 0;
@@ -24,50 +40,206 @@
 }
 
 body {
-    background: var(--bg-gradient);
+    background: var(--cyber-bg);
+    background-image: var(--cyber-bg-grad);
     color: var(--text-primary);
     min-height: 100vh;
-    padding: 2rem;
+    padding: 1.5rem;
     overflow-x: hidden;
+    position: relative;
 }
 
+/* ==========================================================================
+   EFECTOS DE AMBIENTACIÓN (GRID Y SCANLINES)
+   Simulan una pantalla CRT antigua de terminal militar o de monitoreo.
+   ========================================================================== */
+.cyber-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+/* Elementos comunes útiles */
+.font-mono {
+    font-family: 'Fira Code', monospace !important;
+}
+
+/* Navegación Superior */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto 1.5rem auto;
+    padding: 0 1rem;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--susceptible-color);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: 'Fira Code', monospace;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(0, 240, 255, 0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-link:hover {
+    background: rgba(0, 240, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+    transform: translateX(-3px);
+}
+
+.back-arrow {
+    transition: transform 0.3s ease;
+}
+
+.back-link:hover .back-arrow {
+    transform: translateX(-3px);
+}
+
+.terminal-status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: var(--recovered-color);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--recovered-color);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--recovered-glow);
+}
+
+.pulsing {
+    animation: neon-pulse 1.8s infinite ease-in-out;
+}
+
+@keyframes neon-pulse {
+    0%, 100% {
+        opacity: 0.4;
+        box-shadow: 0 0 2px var(--recovered-glow);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 10px var(--recovered-color);
+    }
+}
+
+/* ==========================================================================
+   ENCABEZADO CYBERPUNK (GLITCH EFECT)
+   ========================================================================== */
 .container {
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Header */
-header {
+.cyber-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
 }
 
-header h1 {
+.cyber-badge {
+    display: inline-block;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    color: var(--infected-color);
+    border: 1px solid rgba(255, 0, 85, 0.2);
+    background: rgba(255, 0, 85, 0.05);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+}
+
+.cyber-title {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 2.8rem;
-    font-weight: 800;
-    background: linear-gradient(to right, #ef4444, #a855f7);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #00f0ff 0%, #ff0055 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
-    letter-spacing: -0.05em;
+    position: relative;
 }
 
-header p {
+/* Pequeña línea divisora decorada */
+.header-divider {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(to right, var(--susceptible-color), var(--infected-color));
+    margin: 0.8rem auto;
+    position: relative;
+}
+
+.header-divider::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: var(--text-primary);
+    top: -2px;
+    left: calc(50% - 3px);
+    border-radius: 50%;
+    box-shadow: 0 0 8px #fff;
+}
+
+.cyber-subtitle {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-family: 'Fira Code', monospace;
 }
 
-/* Tabs */
+/* ==========================================================================
+   TABS / CONTROLES DE PESTAÑAS
+   ========================================================================== */
 .tabs-container {
     display: flex;
     justify-content: center;
+    gap: 0.8rem;
     margin-bottom: 2rem;
-    background: rgba(15, 23, 42, 0.5);
-    padding: 0.4rem;
-    border-radius: 9999px;
-    border: 1px solid var(--border-color);
+    background: rgba(11, 14, 23, 0.6);
+    padding: 0.35rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 240, 255, 0.1);
     max-width: fit-content;
     margin-left: auto;
     margin-right: auto;
@@ -77,292 +249,595 @@ header p {
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
+    padding: 0.75rem 1.6rem;
+    font-size: 0.85rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
     cursor: pointer;
-    border-radius: 9999px;
+    border-radius: 8px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .tab-btn:hover {
-    color: var(--text-primary);
+    color: var(--susceptible-color);
+    background: rgba(0, 240, 255, 0.05);
 }
 
 .tab-btn.active {
-    background: var(--accent-color);
-    color: white;
-    box-shadow: 0 4px 14px var(--accent-glow);
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+    color: var(--susceptible-color);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
 }
 
-/* Tab Content */
+.tab-icon {
+    font-family: monospace;
+    font-size: 1rem;
+}
+
 .tab-content {
     display: none;
-    animation: fadeIn 0.5s ease;
+    animation: tabFadeIn 0.45s ease;
 }
 
 .tab-content.active {
     display: block;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes tabFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Glassmorphism Panel con Borde Neón */
+/* ==========================================================================
+   PANEL BASE CON GLASSMORPHISM
+   ========================================================================== */
 .panel {
     background: var(--panel-bg);
-    border: 1px solid var(--border-color);
+    border: var(--panel-border);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-radius: 24px;
+    border-radius: 20px;
     padding: 2rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(168, 85, 247, 0.05);
+    box-shadow: var(--panel-glow);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Grid Layout */
+.panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--susceptible-color), var(--infected-color));
+}
+
+/* Grid layout de la simulación */
 .simulation-grid {
     display: grid;
-    grid-template-columns: 1fr 1.3fr;
+    grid-template-columns: 1fr 1.35fr;
     gap: 2rem;
 }
 
-@media (max-width: 950px) {
+@media (max-width: 1024px) {
     .simulation-grid {
         grid-template-columns: 1fr;
     }
 }
 
-/* Left controls */
+/* Columnas internas */
 .controls-column {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 1.5rem;
 }
 
+.panel-section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+.title-decor {
+    color: var(--infected-color);
+    font-family: monospace;
+}
+
+.panel-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   CONTROLES (SLIDERS ESTILIZADOS CYBERPUNK)
+   ========================================================================== */
 .control-group {
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid rgba(168, 85, 247, 0.08);
-    border-radius: 16px;
-    padding: 1rem;
+    background: rgba(15, 22, 38, 0.45);
+    border: 1px solid rgba(0, 240, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.control-group:focus-within, .control-group:hover {
+    border-color: rgba(0, 240, 255, 0.25);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.05);
 }
 
 .control-label {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
     font-weight: 600;
-    margin-bottom: 0.6rem;
-    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+}
+
+.label-name {
     color: var(--text-primary);
 }
 
 .control-val {
-    color: var(--accent-color);
-    font-family: 'Fira Code', monospace;
+    background: rgba(0, 240, 255, 0.1);
+    color: var(--susceptible-color);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.08);
+}
+
+/* Personalización del Range Input */
+.slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 input[type="range"] {
     -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
     outline: none;
+    z-index: 2;
 }
 
+/* Tirador (Thumb) del Slider */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--accent-color);
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px; /* Tirador cuadrado táctico */
+    background: var(--susceptible-color);
+    border: 2px solid var(--cyber-bg);
     cursor: pointer;
-    box-shadow: 0 0 10px var(--accent-glow);
-    transition: transform 0.1s ease;
+    box-shadow: 0 0 8px var(--susceptible-color);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Cyber Terminal / Eventos del Storytelling */
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2) rotate(45deg);
+    background: #ffffff;
+    box-shadow: 0 0 12px #ffffff;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background: var(--susceptible-color);
+    border: 2px solid var(--cyber-bg);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--susceptible-color);
+    transition: all 0.15s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2) rotate(45deg);
+    background: #ffffff;
+}
+
+/* Cambiar color dinámico para Gamma */
+#slider-gamma::-webkit-slider-thumb {
+    background: var(--recovered-color);
+    box-shadow: 0 0 8px var(--recovered-color);
+}
+#slider-gamma::-webkit-slider-thumb:hover {
+    background: #ffffff;
+    box-shadow: 0 0 12px #ffffff;
+}
+#slider-gamma::-moz-range-thumb {
+    background: var(--recovered-color);
+    box-shadow: 0 0 8px var(--recovered-color);
+}
+
+.slider-indicators {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    font-family: 'Fira Code', monospace;
+}
+
+/* ==========================================================================
+   TERMINAL HACKER DE EVENTOS (STORYTELLING)
+   ========================================================================== */
 .events-panel {
-    background: rgba(9, 5, 20, 0.6);
-    border: 1px solid rgba(168, 85, 247, 0.15);
-    border-radius: 16px;
+    background: rgba(6, 8, 14, 0.75);
+    border: 1px solid rgba(0, 240, 255, 0.12);
+    border-radius: 12px;
     padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    position: relative;
+}
+
+.events-panel::after {
+    content: 'DECR_UNIT';
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.05);
 }
 
 .events-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    color: var(--accent-color);
-    border-bottom: 1px solid rgba(168, 85, 247, 0.2);
-    padding-bottom: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--infected-color);
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 0.4rem;
+    border-bottom: 1px solid rgba(255, 0, 85, 0.15);
+    padding-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.console-icon {
+    font-size: 1rem;
 }
 
 .event-list {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.7rem;
     list-style: none;
 }
 
 .event-item {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     line-height: 1.4;
-    padding: 0.6rem 0.8rem;
-    border-radius: 8px;
-    border-left: 3px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.02);
-    transition: all 0.3s ease;
+    padding: 0.55rem 0.8rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--text-secondary);
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
 }
 
-.event-item strong {
-    font-family: 'Fira Code', monospace;
+.event-bullet {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.event-body {
+    flex-grow: 1;
+}
+
+.event-body strong {
     color: var(--text-primary);
 }
 
+/* Hito activo resaltado en neón */
 .event-item.active {
-    border-left: 3px solid var(--accent-color);
-    background: rgba(168, 85, 247, 0.08);
+    background: rgba(168, 85, 247, 0.07);
+    border-color: rgba(168, 85, 247, 0.25);
     color: var(--text-primary);
-    box-shadow: 0 0 8px rgba(168, 85, 247, 0.1);
+    transform: translateX(4px);
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.05);
 }
 
-/* Right visualization */
+.event-item.active .event-bullet {
+    background: var(--accent-color);
+    color: #ffffff;
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow: 0 0 6px var(--accent-glow);
+}
+
+/* ==========================================================================
+   METRICAS Y GRAFICO DE CURVAS (DERECHA)
+   ========================================================================== */
 .visualization-column {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-/* Tarjetas de métricas SIR */
+/* Dashboard de métricas tridimensionales */
 .sir-metrics {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
+@media (max-width: 580px) {
+    .sir-metrics {
+        grid-template-columns: 1fr;
+    }
+}
+
 .sir-box {
-    border-radius: 16px;
+    background: rgba(15, 22, 38, 0.45);
+    border-radius: 12px;
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    position: relative;
+    transition: all 0.3s ease;
 }
 
-.sir-box.s-box {
-    background: rgba(6, 182, 212, 0.08);
-    border: 1px solid rgba(6, 182, 212, 0.2);
+.sir-box:hover {
+    transform: translateY(-2px);
 }
-.sir-box.i-box {
-    background: rgba(239, 68, 68, 0.08);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+
+.sir-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
 }
-.sir-box.r-box {
-    background: rgba(16, 185, 129, 0.08);
-    border: 1px solid rgba(16, 185, 129, 0.2);
+
+.sir-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
 }
 
 .sir-title {
-    font-size: 0.75rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
     text-transform: uppercase;
+    font-weight: 700;
     letter-spacing: 0.05em;
-    margin-bottom: 0.2rem;
 }
-.sir-box.s-box .sir-title { color: var(--susceptible-color); }
-.sir-box.i-box .sir-title { color: var(--infected-color); }
-.sir-box.r-box .sir-title { color: var(--recovered-color); }
 
 .sir-value {
-    font-size: 1.3rem;
-    font-weight: bold;
+    font-size: 1.4rem;
+    font-weight: 700;
     font-family: 'Fira Code', monospace;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
 }
 
+.sir-description {
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+}
+
+/* Colores específicos de cajas */
+.sir-box.s-box {
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.02);
+}
+.sir-box.s-box .sir-dot {
+    background-color: var(--susceptible-color);
+}
+.sir-box.s-box .sir-title, .sir-box.s-box .sir-value {
+    color: var(--susceptible-color);
+}
+.sir-box.s-box:hover {
+    box-shadow: 0 4px 20px rgba(0, 240, 255, 0.08);
+    border-color: rgba(0, 240, 255, 0.3);
+}
+
+.sir-box.i-box {
+    border: 1px solid rgba(255, 0, 85, 0.15);
+    box-shadow: 0 4px 15px rgba(255, 0, 85, 0.02);
+}
+.sir-box.i-box .sir-dot {
+    background-color: var(--infected-color);
+}
+.sir-box.i-box .sir-title, .sir-box.i-box .sir-value {
+    color: var(--infected-color);
+}
+.sir-box.i-box:hover {
+    box-shadow: 0 4px 20px rgba(255, 0, 85, 0.08);
+    border-color: rgba(255, 0, 85, 0.3);
+}
+
+.sir-box.r-box {
+    border: 1px solid rgba(0, 255, 102, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 255, 102, 0.02);
+}
+.sir-box.r-box .sir-dot {
+    background-color: var(--recovered-color);
+}
+.sir-box.r-box .sir-title, .sir-box.r-box .sir-value {
+    color: var(--recovered-color);
+}
+.sir-box.r-box:hover {
+    box-shadow: 0 4px 20px rgba(0, 255, 102, 0.08);
+    border-color: rgba(0, 255, 102, 0.3);
+}
+
+/* Contenedor del Gráfico de Canvas */
 .graph-container {
-    height: 320px;
+    height: 330px;
     position: relative;
+    background: rgba(6, 8, 14, 0.55);
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid rgba(0, 240, 255, 0.08);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
 }
 
-/* Playback Control (Timeline Slider) */
+/* ==========================================================================
+   PANEL DE CONTROL DE TIMELINE Y REPRODUCCIÓN (PLAY/PAUSE)
+   ========================================================================== */
 .timeline-panel {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 1.2rem;
+    background: rgba(15, 22, 38, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 16px;
     padding: 1rem;
 }
 
 .play-btn {
-    background: var(--accent-color);
+    background: linear-gradient(135deg, var(--accent-color) 0%, #7e22ce 100%);
     border: none;
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    color: white;
+    color: #ffffff;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 10px var(--accent-glow);
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px var(--accent-glow);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .play-btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.6);
 }
 
-/* Tab 2: Math section style */
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+.play-icon {
+    font-size: 1.1rem;
+    margin-left: 2px; /* Alinear el triangulito visualmente */
+}
+
+.timeline-control-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.timeline-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timeline-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.timeline-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+.timeline-slider-wrapper input[type="range"]::-webkit-slider-thumb:hover {
+    background: #ffffff;
+    box-shadow: 0 0 12px #ffffff;
+}
+.timeline-slider-wrapper input[type="range"]::-moz-range-thumb {
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+/* ==========================================================================
+   SECCION MATEMATICA (TAB 2)
+   ========================================================================== */
 .math-section {
     line-height: 1.8;
-    font-size: 1.1rem;
     color: #cbd5e1;
 }
 
 .math-section h2 {
     font-family: 'Space Grotesk', sans-serif;
     color: var(--text-primary);
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+}
+
+.math-section p {
+    font-size: 0.98rem;
+    margin-bottom: 1.2rem;
+}
+
+.math-section strong {
+    color: #ffffff;
 }
 
 .math-section h3 {
-    color: var(--accent-color);
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--susceptible-color);
     margin-top: 1.8rem;
     margin-bottom: 0.8rem;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 .math-card {
-    background: rgba(15, 23, 42, 0.3);
+    background: rgba(10, 14, 23, 0.6);
     border-radius: 12px;
     padding: 1.5rem;
-    margin: 1.5rem 0;
+    margin: 1.2rem 0;
     border-left: 4px solid var(--accent-color);
-    font-family: monospace;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+    font-size: 1rem;
     overflow-x: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.02);
+    border-right: 1px solid rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 .variable-list {
     margin: 1rem 0;
     padding-left: 1.5rem;
+    list-style-type: square;
 }
 
 .variable-list li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
 }
 
-.variable-list strong {
-    color: var(--text-primary);
-}
-.variable-list strong.cyan { color: var(--susceptible-color); }
-.variable-list strong.red { color: var(--infected-color); }
-.variable-list strong.green { color: var(--recovered-color); }
+.cyan-text { color: var(--susceptible-color) !important; }
+.red-text { color: var(--infected-color) !important; }
+.green-text { color: var(--recovered-color) !important; }
+.accent-text { color: var(--accent-color) !important; }
